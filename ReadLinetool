@@ -1,0 +1,76 @@
+#!/bin/bash
+cd ~/Downloads
+curl -O ftp://ftp.cwru.edu/pub/bash/readline-6.2.tar.gz
+rm -d -f -r  ~/Downloads/readline-6.2
+rm -d -f -r  /Applications/gcc44/readline
+gzcat ~/Downloads/readline-6.2.tar.gz | tar -xpf -
+cd readline-6.2
+mkdir build
+cd build
+
+echo -e "		MacOSX10.6.sdk, Universal [1]"
+echo -e "		MacOSX10.7.sdk, Universal [2]"
+echo -e "		MacOSX10.8.sdk, Universal [3]"
+echo -e "		Default [4]"
+read -p "To continue chose and press Enter. " prompt
+if [[ $prompt = "1" ]]
+then
+
+export MACOSX_DEPLOYMENT_TARGET=10.6
+export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+export CFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
+export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
+export CXXFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64 -g -Os -pipe"
+export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
+
+fi
+
+if [[ $prompt = "2" ]]
+then
+
+export MACOSX_DEPLOYMENT_TARGET=10.7
+export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+export CFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
+export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
+export CXXFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64 -g -Os -pipe"
+export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
+
+fi
+
+if [[ $prompt = "3" ]]
+then
+
+export MACOSX_DEPLOYMENT_TARGET=10.8
+export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+export CFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
+export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
+export CXXFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64 -g -Os -pipe"
+export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
+
+fi
+
+if [[ $prompt = "4" ]]
+then
+
+archi=$(sysctl -n hw.machine)
+export CFLAGS="-arch $archi -g -Os -pipe -no-cpp-precomp"
+export CCFLAGS="-arch $archi -g -Os -pipe"
+export CXXFLAGS="-arch $archi -g -Os -pipe"
+export LDFLAGS="-arch $archi -bind_at_load"
+
+fi
+
+../configure --prefix=/Applications/gcc44/readline
+cd shlib
+sed -e 's/-dynamic/-dynamiclib/' Makefile > Makefile.good
+mv Makefile.good Makefile
+cd ..
+make -j $(sysctl -n hw.ncpu)
+make install
+strip -x -c /Applications/gcc44/readline/lib/*
