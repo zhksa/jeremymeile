@@ -1,0 +1,143 @@
+#!/bin/bash
+
+if
+	test -f ~/Downloads/ACE-6.2.1.tar.gz
+then
+	if [ "`md5 -q ~/Downloads/ACE-6.2.1.tar.gz`" != "119a8b1310c6dd817a674a0c2f9679e8" ]
+	then
+		cd ~/Downloads
+		rm -d -f -r ACE-6.2.1.tar.gz
+		curl -O http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz
+	fi
+else
+	cd ~/Downloads
+	rm -d -f -r ACE-6.2.1.tar.gz
+	curl -O http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz
+fi
+
+cd ~/Downloads
+rm -d -f -r ~/Downloads/ACE_wrappers
+rm -d -f -r /Applications/gcc44/ace
+gzcat ~/Downloads/ACE-6.2.1.tar.gz | tar -xpf -
+cd ~/Downloads/ACE_wrappers
+export ACE_ROOT=$(pwd)
+export PATH=$ACE_ROOT/bin:$PATH
+export DYLD_LIBRARY_PATH=$ACE_ROOT/lib
+
+	if [ $(sw_vers -productVersion | cut -c 1-4) = "10.8" ]
+	then
+		osx="mountainlion"
+	fi
+	if [ $(sw_vers -productVersion) = "10.7" ]
+	then
+		osx="lion"
+	fi
+	if [ $(sw_vers -productVersion) = "10.6" ]
+	then
+		osx="snowleopard"
+	fi
+	if [ $(sw_vers -productVersion) = "10.5" ]
+	then
+		osx="leopard"
+	fi
+	
+echo
+echo -e 'Building ACE libs with one of the following parameters:'
+echo -e ' - Use MacOSX10.6.sdk, Universal [1]'
+echo -e ' - Use MacOSX10.7.sdk, Universal [2]'
+echo -e ' - Use MacOSX10.8.sdk, Universal [3]'
+echo -e ' - Default ('$osx') [4]'
+read -p "To continue chose and press Enter. " prompt
+if [[ $prompt = "1" ]]
+then
+
+export MACOSX_DEPLOYMENT_TARGET=10.6
+export DEPLOYMENT_TARGET=10.6
+export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+export CFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
+export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
+export CXXFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64 -g -Os -pipe"
+export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
+echo '#include "ace/config-macosx-snowleopard.h"' > ./ace/config.h
+echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
+echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
+echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
+echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
+echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_snowleopard.GNU' >> ./include/makeinclude/platform_macros.GNU
+echo 'INSTALL_PREFIX = /Applications/gcc44/ace' >> ./include/makeinclude/platform_macros.GNU
+
+fi
+
+if [[ $prompt = "2" ]]
+then
+
+export MACOSX_DEPLOYMENT_TARGET=10.7
+export DEPLOYMENT_TARGET=10.7
+export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+export CFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
+export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
+export CXXFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64 -g -Os -pipe"
+export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
+echo '#include "ace/config-macosx-lion.h"' > ./ace/config.h
+echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
+echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
+echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
+echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
+echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_lion.GNU' >> ./include/makeinclude/platform_macros.GNU
+echo 'INSTALL_PREFIX = /Applications/gcc44/ace' >> ./include/makeinclude/platform_macros.GNU
+
+fi
+
+if [[ $prompt = "3" ]]
+then
+
+export MACOSX_DEPLOYMENT_TARGET=10.8
+export DEPLOYMENT_TARGET=10.8
+export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+export CFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
+export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
+export CXXFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64 -g -Os -pipe"
+export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
+echo '#include "ace/config-macosx-mountainlion.h"' > ./ace/config.h
+echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
+echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
+echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
+echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
+echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_mountainlion.GNU' >> ./include/makeinclude/platform_macros.GNU
+echo 'INSTALL_PREFIX = /Applications/gcc44/ace' >> ./include/makeinclude/platform_macros.GNU
+
+fi
+
+if [[ $prompt = "4" ]]
+then
+	
+echo '#include "ace/config-macosx-'$osx'.h"' > ./ace/config.h
+echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
+echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
+echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
+echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
+echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_'$osx'.GNU' >> ./include/makeinclude/platform_macros.GNU
+echo 'INSTALL_PREFIX = /Applications/gcc44/ace' >> ./include/makeinclude/platform_macros.GNU
+
+fi
+
+echo
+cd ace
+make -j $(sysctl -n hw.ncpu)
+make install
+sudo ACE_ROOT=$ACE_ROOT DYLD_LIBRARY_PATH=$ACE_ROOT/lib make install
+cd /Applications/gcc44/ace
+patch -f -p0 < <(curl http://jeremymeile.ch/files/emux7/ACE.patch)
+install_name_tool -id /Applications/gcc44/ace/lib/libACE_Compression.dylib /Applications/gcc44/ace/lib/libACE_Compression.dylib
+install_name_tool -id /Applications/gcc44/ace/lib/libACE_ETCL_Parser.dylib /Applications/gcc44/ace/lib/libACE_ETCL_Parser.dylib
+install_name_tool -id /Applications/gcc44/ace/lib/libACE_ETCL.dylib /Applications/gcc44/ace/lib/libACE_ETCL.dylib
+install_name_tool -id /Applications/gcc44/ace/lib/libACE_Monitor_Control.dylib /Applications/gcc44/ace/lib/libACE_Monitor_Control.dylib
+install_name_tool -id /Applications/gcc44/ace/lib/libACE_RLECompression.dylib /Applications/gcc44/ace/lib/libACE_RLECompression.dylib
+install_name_tool -id /Applications/gcc44/ace/lib/libACE_SSL.dylib /Applications/gcc44/ace/lib/libACE_SSL.dylib
+install_name_tool -id /Applications/gcc44/ace/lib/libACE.dylib /Applications/gcc44/ace/lib/libACE.dylib
