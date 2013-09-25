@@ -1,13 +1,31 @@
 #!/bin/bash
-
+# Colors
+ESC_SEQ="\x1b["
+COL_RESET=$ESC_SEQ"39;49;00m"
+COL_RED=$ESC_SEQ"31;01m"
+COL_GREEN=$ESC_SEQ"32;01m"
+COL_YELLOW=$ESC_SEQ"33;01m"
+COL_BLUE=$ESC_SEQ"34;01m"
+COL_MAGENTA=$ESC_SEQ"35;01m"
+COL_CYAN=$ESC_SEQ"36;01m"
+COL_GRAY=$ESC_SEQ"30;01m"
+COL_WHITE=$ESC_SEQ"37;01m"
+echo
+echo -e '#############################################'
+echo -e '| JEREMYMEILE.CH                            |'
+echo -e '|                                           |'
+echo -e '| ACE lib builder   '$COL_BLUE'[ACEtool]'$COL_RESET'     |'
+echo -e '#############################################'
+echo
+echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Getting source ...'
 if
-	test -f ~/Downloads/ACE-6.2.1.tar.gz
+	test -f ~/Downloads/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/TDBtool_errorMSG
 then
 	if [ `echo $(md5 -q ~/Downloads/ACE-6.2.1.tar.gz)` != "119a8b1310c6dd817a674a0c2f9679e8" ]
 	then
 		cd ~/Downloads
-		rm -d -f -r ACE-6.2.1.tar.gz
-		curl -O http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz
+		rm -d -f -r ACE-6.2.1.tar.gz > /dev/null 2>/tmp/TDBtool_errorMSG
+		curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz
 	fi
 else
 	cd ~/Downloads
@@ -143,10 +161,31 @@ echo 'INSTALL_PREFIX = /Applications/gcc44/ace' >> ./include/makeinclude/platfor
 fi
 
 echo
-cd ace
-make -j $(sysctl -n hw.ncpu)
-make install
-sudo ACE_ROOT=$ACE_ROOT DYLD_LIBRARY_PATH=$ACE_ROOT/lib make install
+echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Building ACE ...'
+	if
+		make -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/TDBtool_errorMSG
+	then
+		echo -e $COL_GREEN' OK'$COL_RESET
+		
+		if
+		! sudo -v
+		then
+			exit 1
+		fi
+		
+		echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Installing ACE ...'
+		if
+			sudo ACE_ROOT=$ACE_ROOT DYLD_LIBRARY_PATH=$ACE_ROOT/lib make install > /dev/null 2>/tmp/TDBtool_errorMSG
+		then
+			echo -e $COL_GREEN' OK'$COL_RESET
+		else
+			echo -e $COL_RED' error'$COL_RESET
+			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+		fi
+	else
+		echo -e $COL_RED' error'$COL_RESET
+		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+	fi
 cd /Applications/gcc44/ace
 patch -f -p0 < <(curl http://jeremymeile.ch/files/emux7/ACE.patch)
 install_name_tool -id /Applications/gcc44/ace/lib/libACE_Compression.dylib /Applications/gcc44/ace/lib/libACE_Compression.dylib
