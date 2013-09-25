@@ -3,7 +3,7 @@
 if
 	test -f ~/Downloads/ACE-6.2.1.tar.gz
 then
-	if [ "`md5 -q ~/Downloads/ACE-6.2.1.tar.gz`" != "119a8b1310c6dd817a674a0c2f9679e8" ]
+	if [ `echo $(md5 -q ~/Downloads/ACE-6.2.1.tar.gz)` != "119a8b1310c6dd817a674a0c2f9679e8" ]
 	then
 		cd ~/Downloads
 		rm -d -f -r ACE-6.2.1.tar.gz
@@ -40,14 +40,29 @@ export DYLD_LIBRARY_PATH=$ACE_ROOT/lib
 	then
 		osx="leopard"
 	fi
-	
-echo
-echo -e 'Building ACE libs with one of the following parameters:'
-echo -e ' - Use MacOSX10.6.sdk, Universal [1]'
-echo -e ' - Use MacOSX10.7.sdk, Universal [2]'
-echo -e ' - Use MacOSX10.8.sdk, Universal [3]'
-echo -e ' - Default ('$osx') [4]'
-read -p "To continue chose and press Enter. " prompt
+
+if f=$(xcode-select --print-path)
+then
+	echo -e 'Building ACE libs with one of the following parameters:'
+		if test -d $f'//Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk'
+		then
+			echo -e ' - Use MacOSX10.6.sdk, Universal [1]'
+		fi
+		if test -d $f'//Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk'
+		then
+			echo -e ' - Use MacOSX10.7.sdk, Universal [2]'
+		fi
+		if test -d $f'//Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk'
+		then
+			echo -e ' - Use MacOSX10.8.sdk, Universal [3]'
+		fi
+		echo -e ' - Default ('$osx') [4]'
+		read -p "To continue chose and press Enter. " prompt
+else
+	echo -e 'Install and initialize XCode first!'
+	exit 1
+fi
+
 if [[ $prompt = "1" ]]
 then
 
