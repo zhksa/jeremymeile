@@ -17,25 +17,46 @@ echo -e '|                                           |'
 echo -e '| ACE lib builder   '$COL_BLUE'[ACEtool]'$COL_RESET'     |'
 echo -e '#############################################'
 echo
-echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Getting source ...'
+echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Checking source ...'
 if
 	test -f ~/Downloads/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/TDBtool_errorMSG
 then
 	if [ `echo $(md5 -q ~/Downloads/ACE-6.2.1.tar.gz)` != "119a8b1310c6dd817a674a0c2f9679e8" ]
 	then
+		echo -e $COL_RED' Not found'$COL_RESET
+		echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Getting source ...'
 		cd ~/Downloads
 		rm -d -f -r ACE-6.2.1.tar.gz > /dev/null 2>/tmp/TDBtool_errorMSG
-		curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz
+		if
+			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/TDBtool_errorMSG
+		then
+			echo -e $COL_GREEN' OK'$COL_RESET
+		else
+			echo -e $COL_RED' error'$COL_RESET
+			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+			exit 1
+		fi
+	else
+		echo -e $COL_GREEN' OK'$COL_RESET
 	fi
 else
+	echo -e $COL_RED' Not found'$COL_RESET
+	echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Getting source ...'
 	cd ~/Downloads
 	rm -d -f -r ACE-6.2.1.tar.gz
-	curl -O http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz
+		if
+			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/TDBtool_errorMSG
+		then
+			echo -e $COL_GREEN' OK'$COL_RESET
+		else
+			echo -e $COL_RED' error'$COL_RESET
+			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+			exit 1
+		fi
 fi
 
 cd ~/Downloads
 rm -d -f -r ~/Downloads/ACE_wrappers
-rm -d -f -r /Applications/gcc44/ace
 gzcat ~/Downloads/ACE-6.2.1.tar.gz | tar -xpf -
 cd ~/Downloads/ACE_wrappers
 export ACE_ROOT=$(pwd)
@@ -175,7 +196,7 @@ echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Building ACE ...'
 		
 		echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Installing ACE ...'
 		if
-			sudo ACE_ROOT=$ACE_ROOT DYLD_LIBRARY_PATH=$ACE_ROOT/lib make install > /dev/null 2>/tmp/TDBtool_errorMSG
+			sudo ACE_ROOT=$ACE_ROOT make install > /dev/null 2>/tmp/TDBtool_errorMSG
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
 		else
