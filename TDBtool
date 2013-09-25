@@ -1,5 +1,4 @@
 #!/bin/bash
-printf() { :; }
 # Colors
 ESC_SEQ="\x1b["
 COL_RESET=$ESC_SEQ"39;49;00m"
@@ -140,7 +139,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Initializing MySQL directory ...'
 Check_DB(){
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Initializing Database ...'
 if
-pw=$(sudo sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD 2>/tmp/TDBtool_errorMSG)
+pw=$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD 2>/tmp/TDBtool_errorMSG)
 then
 	if
 	echo -e $COL_GREEN' OK'$COL_RESET
