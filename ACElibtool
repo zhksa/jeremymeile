@@ -110,10 +110,10 @@ export DEPLOYMENT_TARGET=10.6
 export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
 export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
 export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
-export CFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
-export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
-export CXXFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64 -g -Os -pipe"
-export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
+export CFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64"
+export CCFLAGS="-arch i386 -arch x86_64"
+export CXXFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64"
+export LDFLAGS="-arch i386 -arch x86_64"
 echo '#include "ace/config-macosx-snowleopard.h"' > ./ace/config.h
 echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
 echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
@@ -132,10 +132,10 @@ export DEPLOYMENT_TARGET=10.7
 export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
 export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
 export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-export CFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
-export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
-export CXXFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64 -g -Os -pipe"
-export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
+export CFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64"
+export CCFLAGS="-arch i386 -arch x86_64"
+export CXXFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64"
+export LDFLAGS="-arch i386 -arch x86_64"
 echo '#include "ace/config-macosx-lion.h"' > ./ace/config.h
 echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
 echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
@@ -154,10 +154,10 @@ export DEPLOYMENT_TARGET=10.8
 export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-export CFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
-export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
-export CXXFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64 -g -Os -pipe"
-export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
+export CFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64"
+export CCFLAGS="-arch i386 -arch x86_64"
+export CXXFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64"
+export LDFLAGS="-arch i386 -arch x86_64"
 echo '#include "ace/config-macosx-mountainlion.h"' > ./ace/config.h
 echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
 echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
