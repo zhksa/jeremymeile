@@ -14,7 +14,7 @@ echo
 echo -e '#############################################'
 echo -e '| JEREMYMEILE.CH                            |'
 echo -e '|                                           |'
-echo -e '| ACE lib builder   '$COL_BLUE'[ACEtool]'$COL_RESET'     |'
+echo -e '| ACE lib builder   '$COL_BLUE'[ACEtool]'$COL_RESET'               |'
 echo -e '#############################################'
 echo
 echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Checking source ...'
