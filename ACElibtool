@@ -39,6 +39,7 @@ then
 else
 	exit
 fi
+cd /usr/local
 echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Checking source ...'
 if
 	test -f ~/Downloads/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/TDBtool_errorMSG
