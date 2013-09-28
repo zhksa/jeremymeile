@@ -352,12 +352,11 @@ world_update(){
 						echo -e $COL_RED' error'$COL_RESET
 						return 1
 					fi
-					tdbdate=$(echo $f | /usr/bin/grep -o '\(201[0-9]\{1\}_\)' | /usr/bin/head -1)
 				then
-								file=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/'$tdbdate'/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1)
+								file=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1)
 									if [ "$curvar" = "0" ]
 										then
-										maxvar=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/'$tdbdate'/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g')
+										maxvar=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g')
 									fi
 										if [ "$file" = "" ]
 										then
@@ -412,12 +411,11 @@ auth_update(){
 						echo -e $COL_RED' error'$COL_RESET
 						return 1
 					fi
-					tdbdate=$(echo $f | /usr/bin/grep -o '\(201[0-9]\{1\}_\)' | /usr/bin/head -1)
 				then
-								file=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sed -n '/'$tdbdate'/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1)
+								file=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1)
 									if [ "$curvar" = "0" ]
 										then
-										maxvar=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sed -n '/'$tdbdate'/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g')
+										maxvar=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g')
 									fi
 										if [ "$file" = "" ]
 										then
@@ -472,12 +470,11 @@ characters_update(){
 						echo -e $COL_RED' error'$COL_RESET
 						return 1
 					fi
-					tdbdate=$(echo $f | /usr/bin/grep -o '\(201[0-9]\{1\}_\)' | /usr/bin/head -1)
 				then
-								file=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sed -n '/'$tdbdate'/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1)
+								file=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1)
 									if [ "$curvar" = "0" ]
 										then
-										maxvar=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sed -n '/'$tdbdate'/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g')
+										maxvar=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g')
 									fi
 										if [ "$file" = "" ]
 										then
@@ -771,9 +768,9 @@ then
 	echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating new Database ...'
 	sleep 2
 	sudo rm -d -f -r /trinityserver/mysql/data
-	rm -d -f -r ~/my.cnf 
-	rm -d -f -r ~/etc/my.cnf 
-	rm -d -f -r ./my.cnf 
+	sudo rm -d -f -r ~/my.cnf 
+	sudo rm -d -f -r ~/etc/my.cnf 
+	sudo rm -d -f -r ./my.cnf 
 		if
 		cd /trinityserver/mysql ; sudo /trinityserver/mysql/scripts/mysql_install_db --explicit_defaults_for_timestamp --no-defaults --cross-bootstrap --user=mysql --force --datadir=/trinityserver/mysql/data > /dev/null 2>/tmp/TDBtool_errorMSG
 		then
@@ -925,7 +922,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA$tdbfile$COL_RESE
 					sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) update_info -e "INSERT INTO world VALUES ('$C');"
 			then
 					echo -e $COL_GREEN' OK'$COL_RESET
-					year=$(echo $C | /usr/bin/grep -o '\(201[0-9]\{1\}_\)' | /usr/bin/head -1)
+					*year=$(echo $C | /usr/bin/grep -o '\(201[0-9]\{1\}_\)' | /usr/bin/head -1)
 			else	
 					echo -e $COL_RED' error'$COL_RESET
 						Backup_restore
@@ -942,7 +939,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'characters_datab
 		sudo /usr/bin/find -s /trinityserver/sql -name characters_database.sql | /usr/bin/awk 'END{print}' | /usr/bin/awk '{ print "source",$0 }' | /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) characters > /dev/null 2>/tmp/TDBtool_errorMSG
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
-			B=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/'$year'/p' | /usr/bin/grep -e '\.sql' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sort -n | /usr/bin/sed '/^$/d' | /usr/bin/sed '$!d')
+			B=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/grep -e '\.sql' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sort -n | /usr/bin/sed '/^$/d' | /usr/bin/sed '$!d')
 			echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Adding update info ...'
 					if
 						sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) update_info -e "DELETE FROM characters;"
@@ -965,7 +962,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'auth_database.sq
 		sudo /usr/bin/find -s /trinityserver/sql -name auth_database.sql | /usr/bin/awk 'END{print}' | /usr/bin/awk '{ print "source",$0 }' | /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) auth > /dev/null 2>/tmp/TDBtool_errorMSG
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
-			B=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/'$year'/p' | /usr/bin/grep -e '\.sql' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sort -n | /usr/bin/sed '/^$/d' | /usr/bin/sed '$!d')
+			B=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/grep -e '\.sql' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sort -n | /usr/bin/sed '/^$/d' | /usr/bin/sed '$!d')
 			echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Adding update info ...'
 					if
 						sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) update_info -e "DELETE FROM auth;"
