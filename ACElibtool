@@ -59,9 +59,11 @@ cd ~/Downloads
 rm -d -f -r ~/Downloads/ACE_wrappers
 gzcat ~/Downloads/ACE-6.2.1.tar.gz | tar -xpf -
 cd ~/Downloads/ACE_wrappers
-export ACE_ROOT=$(pwd)
-export PATH=$ACE_ROOT/bin:$PATH
-export DYLD_LIBRARY_PATH=$ACE_ROOT/lib
+echo 'export ACE_ROOT=$(pwd)' > bash_profile
+echo 'export ACE_ROOT=$ACE_ROOT' >> bash_profile
+echo 'export PATH=$ACE_ROOT/bin:$PATH' >> bash_profile
+echo 'export DYLD_LIBRARY_PATH=$ACE_ROOT/lib' >> bash_profile
+source bash_profile
 
 	if [ $(sw_vers -productVersion | cut -c 1-4) = "10.8" ]
 	then
@@ -82,16 +84,17 @@ export DYLD_LIBRARY_PATH=$ACE_ROOT/lib
 
 if f=$(xcode-select --print-path)
 then
+echo
 	echo -e 'Building ACE libs with one of the following parameters:'
-		if test -d $f'//Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk'
+		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk'
 		then
 			echo -e ' - Use MacOSX10.6.sdk, Universal [1]'
 		fi
-		if test -d $f'//Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk'
+		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk'
 		then
 			echo -e ' - Use MacOSX10.7.sdk, Universal [2]'
 		fi
-		if test -d $f'//Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk'
+		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk'
 		then
 			echo -e ' - Use MacOSX10.8.sdk, Universal [3]'
 		fi
@@ -184,12 +187,13 @@ fi
 echo
 echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Building ACE ...'
 	if
+		cd ace
 		make -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/TDBtool_errorMSG
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 		
 		if
-		! sudo -v
+		! sudo () { ( unset LD_LIBRARY_PATH DYLD_LIBRARY_PATH; exec command sudo $* ) }
 		then
 			exit 1
 		fi
@@ -197,8 +201,25 @@ echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Building ACE ...'
 		echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Installing ACE ...'
 		if
 			sudo ACE_ROOT=$ACE_ROOT make install > /dev/null 2>/tmp/TDBtool_errorMSG
+			sudo install_name_tool -id /Applications/gcc44/ace/lib/libACE_Compression.dylib /Applications/gcc44/ace/lib/libACE_Compression.dylib > /dev/null 2>/tmp/TDBtool_errorMSG
+			sudo install_name_tool -id /Applications/gcc44/ace/lib/libACE_ETCL_Parser.dylib /Applications/gcc44/ace/lib/libACE_ETCL_Parser.dylib > /dev/null 2>/tmp/TDBtool_errorMSG
+			sudo install_name_tool -id /Applications/gcc44/ace/lib/libACE_ETCL.dylib /Applications/gcc44/ace/lib/libACE_ETCL.dylib > /dev/null 2>/tmp/TDBtool_errorMSG
+			sudo install_name_tool -id /Applications/gcc44/ace/lib/libACE_Monitor_Control.dylib /Applications/gcc44/ace/lib/libACE_Monitor_Control.dylib > /dev/null 2>/tmp/TDBtool_errorMSG
+			sudo install_name_tool -id /Applications/gcc44/ace/lib/libACE_RLECompression.dylib /Applications/gcc44/ace/lib/libACE_RLECompression.dylib > /dev/null 2>/tmp/TDBtool_errorMSG
+			sudo install_name_tool -id /Applications/gcc44/ace/lib/libACE_SSL.dylib /Applications/gcc44/ace/lib/libACE_SSL.dylib > /dev/null 2>/tmp/TDBtool_errorMSG
+			sudo install_name_tool -id /Applications/gcc44/ace/lib/libACE.dylib /Applications/gcc44/ace/lib/libACE.dylib > /dev/null 2>/tmp/TDBtool_errorMSG
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
+					echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Patching ACE ...'
+					if
+						cat /Applications/gcc44/ace/include/ace/config-macosx-leopard.h | sed -n '/if defined(__APPLE_CC__) && (__APPLE_CC__ < 1173)/!p' | sed -n '/Compiler must be upgraded/!p' | sed -n '/ __APPLE_CC__ /!p' > /tmp/config-macosx-leopard.h
+						sudo cp /tmp/config-macosx-leopard.h /Applications/gcc44/ace/include/ace/config-macosx-leopard.h
+					then
+						echo -e $COL_GREEN' OK'$COL_RESET
+					else
+						echo -e $COL_RED' error'$COL_RESET
+						echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET					
+					fi
 		else
 			echo -e $COL_RED' error'$COL_RESET
 			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
@@ -207,12 +228,3 @@ echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Building ACE ...'
 		echo -e $COL_RED' error'$COL_RESET
 		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
 	fi
-cd /Applications/gcc44/ace
-patch -f -p0 < <(curl http://jeremymeile.ch/files/emux7/ACE.patch)
-install_name_tool -id /Applications/gcc44/ace/lib/libACE_Compression.dylib /Applications/gcc44/ace/lib/libACE_Compression.dylib
-install_name_tool -id /Applications/gcc44/ace/lib/libACE_ETCL_Parser.dylib /Applications/gcc44/ace/lib/libACE_ETCL_Parser.dylib
-install_name_tool -id /Applications/gcc44/ace/lib/libACE_ETCL.dylib /Applications/gcc44/ace/lib/libACE_ETCL.dylib
-install_name_tool -id /Applications/gcc44/ace/lib/libACE_Monitor_Control.dylib /Applications/gcc44/ace/lib/libACE_Monitor_Control.dylib
-install_name_tool -id /Applications/gcc44/ace/lib/libACE_RLECompression.dylib /Applications/gcc44/ace/lib/libACE_RLECompression.dylib
-install_name_tool -id /Applications/gcc44/ace/lib/libACE_SSL.dylib /Applications/gcc44/ace/lib/libACE_SSL.dylib
-install_name_tool -id /Applications/gcc44/ace/lib/libACE.dylib /Applications/gcc44/ace/lib/libACE.dylib
