@@ -311,6 +311,21 @@ MySQL_start(){
 		fi
 	sleep 2
 }
+MySQL_restart(){
+	echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Restarting MySQL ...'
+	sleep 2
+		if
+		sudo /trinityserver/mysql/support-files/mysql.server restart > /dev/null 2>/tmp/TDBtool_errorMSG
+		then
+			echo -e $COL_GREEN' OK'$COL_RESET
+			return 0
+		else
+			echo -e $COL_RED' error'$COL_RESET
+			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+			exit 1
+		fi
+	sleep 2
+}
 Get_TDB(){
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Looking for TrinityDB ...'
 sleep 2
@@ -346,30 +361,29 @@ sleep 2
 }
 world_update(){
 			if
-					f=`sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) update_info -e "SELECT * FROM world;" | /usr/bin/sed '/^$/d' | /usr/bin/awk 'END{print}'`
-					if [ "$f" = "file" ]
-						then
+				f=`sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "SELECT * FROM world;" | /usr/bin/sed '/^$/d' | /usr/bin/awk 'END{print}' 2>/tmp/TDBtool_errorMSG`
+					if [ "$f" = "file" ]; then
 						echo -e $COL_RED' error'$COL_RESET
+						echo -e 'Update database is empty!'
 						return 1
 					fi
-				then
-								file=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1)
-									if [ "$curvar" = "0" ]
-										then
-										maxvar=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g')
-									fi
-										if [ "$file" = "" ]
-										then
-											if [ "$first" = "0" ]
-												then
-													echo -e $COL_GREEN' Up to date '$COL_RESET$COL_WHITE'['$f']'$COL_RESET
-													return 0
+			then
+						file=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
+								if [ "$curvar" = "0" ]; then
+									maxvar=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g' 2>/tmp/TDBtool_errorMSG)
+								fi
+								if [ "$curvar" = "500" ]; then
+									MySQL_restart
+								fi
+										if [ "$file" = "" ]; then
+											if [ "$first" = "0" ]; then
+												echo -e $COL_GREEN' Up to date '$COL_RESET$COL_WHITE'['$f']'$COL_RESET
+												return 0
 											fi
 										else
-											if [ "$first" = "0" ]
-												then
-													echo
-													first='1'
+											if [ "$first" = "0" ]; then
+												echo
+												first='1'
 											fi
 											echo -ne '       --> '
 											echo -ne $COL_MAGENTA $(/usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/head -1)$COL_RESET
@@ -377,13 +391,13 @@ world_update(){
 											echo -ne ' ['$curvar'/'$maxvar']'
 											echo -ne ' ...'
 												if
-													sudo /usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk '{ print "source",$0 }' | sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) world 2>/tmp/TDBtool_errorMSG
+													sudo /usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk '{ print "source",$0 }' | sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password world 2>/tmp/TDBtool_errorMSG
 												then
 													echo -e $COL_GREEN' OK'$COL_RESET
 														B=$(/usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/head -1)
 															if
-																sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) update_info -e "DELETE FROM world;"
-																sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) update_info -e "INSERT INTO world VALUES ('$B');"
+																sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "DELETE FROM world;"
+																sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "INSERT INTO world VALUES ('$B');"
 															then
 																world_update
 															else	
@@ -398,37 +412,37 @@ world_update(){
 													exit 1
 												fi
 										fi
-				else
-					echo -e $COL_RED' error'$COL_RESET
-					return 1
-				fi
+			else
+				echo -e $COL_RED' error'$COL_RESET
+				echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+				return 1
+			fi
 }
 auth_update(){
 			if
-					f=`sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) update_info -e "SELECT * FROM auth;" | /usr/bin/sed '/^$/d' | /usr/bin/awk 'END{print}'`
-					if [ "$f" = "file" ]
-						then
+				f=`sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "SELECT * FROM auth;" | /usr/bin/sed '/^$/d' | /usr/bin/awk 'END{print}' 2>/tmp/TDBtool_errorMSG`
+					if [ "$f" = "file" ]; then
 						echo -e $COL_RED' error'$COL_RESET
+						echo -e 'Update database is empty!'
 						return 1
 					fi
-				then
-								file=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1)
-									if [ "$curvar" = "0" ]
-										then
-										maxvar=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g')
-									fi
-										if [ "$file" = "" ]
-										then
-											if [ "$first" = "0" ]
-												then
-													echo -e $COL_GREEN' Up to date '$COL_RESET$COL_WHITE'['$f']'$COL_RESET
-													return 0
+			then
+						file=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
+								if [ "$curvar" = "0" ]; then
+									maxvar=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g' 2>/tmp/TDBtool_errorMSG)
+								fi
+								if [ "$curvar" = "500" ]; then
+									MySQL_restart
+								fi
+										if [ "$file" = "" ]; then
+											if [ "$first" = "0" ]; then
+												echo -e $COL_GREEN' Up to date '$COL_RESET$COL_WHITE'['$f']'$COL_RESET
+												return 0
 											fi
 										else
-											if [ "$first" = "0" ]
-												then
-													echo
-													first='1'
+											if [ "$first" = "0" ]; then
+												echo
+												first='1'
 											fi
 											echo -ne '       --> '
 											echo -ne $COL_MAGENTA $(/usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/head -1)$COL_RESET
@@ -436,13 +450,13 @@ auth_update(){
 											echo -ne ' ['$curvar'/'$maxvar']'
 											echo -ne ' ...'
 												if
-													sudo /usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk '{ print "source",$0 }' | sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) auth 2>/tmp/TDBtool_errorMSG
+													sudo /usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk '{ print "source",$0 }' | sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password auth 2>/tmp/TDBtool_errorMSG
 												then
 													echo -e $COL_GREEN' OK'$COL_RESET
 														B=$(/usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/head -1)
 															if
-																sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) update_info -e "DELETE FROM auth;"
-																sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) update_info -e "INSERT INTO auth VALUES ('$B');"
+																sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "DELETE FROM auth;"
+																sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "INSERT INTO auth VALUES ('$B');"
 															then
 																auth_update
 															else	
@@ -457,37 +471,37 @@ auth_update(){
 													exit 1
 												fi
 										fi
-				else
-					echo -e $COL_RED' error'$COL_RESET
-					return 1
-				fi
+			else
+				echo -e $COL_RED' error'$COL_RESET
+				echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+				return 1
+			fi
 }
 characters_update(){
 			if
-					f=`sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) update_info -e "SELECT * FROM characters;" | /usr/bin/sed '/^$/d' | /usr/bin/awk 'END{print}'`
-					if [ "$f" = "file" ]
-						then
+				f=`sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "SELECT * FROM characters;" | /usr/bin/sed '/^$/d' | /usr/bin/awk 'END{print}' 2>/tmp/TDBtool_errorMSG`
+					if [ "$f" = "file" ]; then
 						echo -e $COL_RED' error'$COL_RESET
+						echo -e 'Update database is empty!'
 						return 1
 					fi
-				then
-								file=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1)
-									if [ "$curvar" = "0" ]
-										then
-										maxvar=$(/usr/bin/find -d /trinityserver/sql | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g')
-									fi
-										if [ "$file" = "" ]
-										then
-											if [ "$first" = "0" ]
-												then
-													echo -e $COL_GREEN' Up to date '$COL_RESET$COL_WHITE'['$f']'$COL_RESET
-													return 0
+			then
+						file=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
+								if [ "$curvar" = "0" ]; then
+									maxvar=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g' 2>/tmp/TDBtool_errorMSG)
+								fi
+								if [ "$curvar" = "500" ]; then
+									MySQL_restart
+								fi
+										if [ "$file" = "" ]; then
+											if [ "$first" = "0" ]; then
+												echo -e $COL_GREEN' Up to date '$COL_RESET$COL_WHITE'['$f']'$COL_RESET
+												return 0
 											fi
 										else
-											if [ "$first" = "0" ]
-												then
-													echo
-													first='1'
+											if [ "$first" = "0" ]; then
+												echo
+												first='1'
 											fi
 											echo -ne '       --> '
 											echo -ne $COL_MAGENTA $(/usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/head -1)$COL_RESET
@@ -495,13 +509,13 @@ characters_update(){
 											echo -ne ' ['$curvar'/'$maxvar']'
 											echo -ne ' ...'
 												if
-													sudo /usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk '{ print "source",$0 }' | sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) characters 2>/tmp/TDBtool_errorMSG
+													sudo /usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk '{ print "source",$0 }' | sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password characters 2>/tmp/TDBtool_errorMSG
 												then
 													echo -e $COL_GREEN' OK'$COL_RESET
 														B=$(/usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/head -1)
 															if
-																sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) update_info -e "DELETE FROM characters;"
-																sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) update_info -e "INSERT INTO characters VALUES ('$B');"
+																sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "DELETE FROM characters;"
+																sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "INSERT INTO characters VALUES ('$B');"
 															then
 																characters_update
 															else	
@@ -516,12 +530,14 @@ characters_update(){
 													exit 1
 												fi
 										fi
-				else
-					echo -e $COL_RED' error'$COL_RESET
-					return 1
-				fi
+			else
+				echo -e $COL_RED' error'$COL_RESET
+				echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+				return 1
+			fi
 }
 DB_update(){
+mysql_password=$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD)
 	echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running world updates ...'
 		if
 			first='0'
