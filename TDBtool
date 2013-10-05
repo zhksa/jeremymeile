@@ -777,7 +777,7 @@ fi
 #backupend
 MySQL_stop
 echo -ne $COL_RED'[WARNING] '$COL_RESET
-read -p "Delete the whole MySQL Database and create a new one? Press [y] to continue or any other key to abort" -n 1 -r
+read -p "Delete the whole MySQL Database and create a new one? Press [y] to continue or any other key to abort: " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
 	echo
@@ -798,7 +798,7 @@ then
 			exit 1
 		fi
 else
-	exit 1
+	Main_menu
 fi
 MySQL_stop
 MySQL_start

@@ -73,4 +73,3 @@ mv Makefile.good Makefile
 cd ..
 make -j $(sysctl -n hw.ncpu)
 make install
-strip -x -c /Applications/gcc44/readline/lib/*
