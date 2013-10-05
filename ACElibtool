@@ -14,21 +14,16 @@ get_path(){
 echo -e 'Welcome to '$COL_BLUE'[ACEtool] '$COL_RESET' ...'
 while true
 do
-	read -p "Enter install path. " prefix
-	if cd $prefix; then
-		prefix=$dir
+	echo -ne $COL_GREEN'Enter install path: '$COL_RESET
+	read -p '' prefix
 		if sudo test -d $prefix; then
 			prefix=$prefix'/ace'
 			echo -e 'Installing ACE in: '$prefix
 			break
 		else
-			echo -e 'Bad path'
+			echo -e 'Path does not exists'
 			continue
 		fi
-	else
-		echo -e 'Bad path'
-		continue
-	fi
 done
 }
 echo
