@@ -84,15 +84,24 @@ else
 		fi
 fi
 get_path
-cd ~/Downloads
-sudo rm -d -f -r ~/Downloads/ACE_wrappers > /dev/null 2>/tmp/TDBtool_errorMSG
-gzcat ~/Downloads/ACE-6.2.1.tar.gz | tar -xpf -
-cd ~/Downloads/ACE_wrappers
-echo 'export ACE_ROOT=$(pwd)' > bash_profile
-echo 'export ACE_ROOT=$ACE_ROOT' >> bash_profile
-echo 'export PATH=$ACE_ROOT/bin:$PATH' >> bash_profile
-echo 'export DYLD_LIBRARY_PATH=$ACE_ROOT/lib' >> bash_profile
-source bash_profile
+echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Preparing source ...'
+if
+	cd ~/Downloads
+	sudo rm -d -f -r ~/Downloads/ACE_wrappers > /dev/null 2>/tmp/TDBtool_errorMSG
+	gzcat ~/Downloads/ACE-6.2.1.tar.gz | tar -xpf -
+	cd ~/Downloads/ACE_wrappers
+	echo 'export ACE_ROOT=$(pwd)' > bash_profile
+	echo 'export ACE_ROOT=$ACE_ROOT' >> bash_profile
+	echo 'export PATH=$ACE_ROOT/bin:$PATH' >> bash_profile
+	echo 'export DYLD_LIBRARY_PATH=$ACE_ROOT/lib' >> bash_profile
+	source bash_profile
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' error'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+	exit 1
+fi
 
 	if [ $(sw_vers -productVersion | cut -c 1-4) = "10.8" ]
 	then
@@ -114,7 +123,7 @@ source bash_profile
 if f=$(xcode-select --print-path)
 then
 echo
-	echo -e 'Building ACE libs with one of the following parameters:'
+	echo -e $COL_GREEN'Building ACE libs with one of the following parameters:'$COL_RESET
 		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk'
 		then
 			echo -e ' - Use MacOSX10.6.sdk, Universal [1]'
@@ -128,7 +137,8 @@ echo
 			echo -e ' - Use MacOSX10.8.sdk, Universal [3]'
 		fi
 		echo -e ' - Default ('$osx') [4]'
-		read -p "To continue chose and press Enter. " prompt
+		echo -ne $COL_GREEN'To continue chose and press Enter. '$COL_RESET
+		read -p '' prompt
 else
 	echo -e 'Install and initialize XCode first!'
 	exit 1
