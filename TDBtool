@@ -18,7 +18,6 @@ echo -e '|                                           |'
 echo -e '| TRINITYCORE DATABASE TOOL   '$COL_BLUE'[TDBtool]'$COL_RESET'     |'
 echo -e '#############################################'
 echo
-
 if
 	sudo -v
 then
@@ -26,32 +25,25 @@ then
 else
 	exit
 fi
-
 Main_menu(){
+if [[ -d /trinityserver/mysql/data ]]
+then
 echo -e 'Welcome to '$COL_BLUE'[TDBtool] '$COL_RESET' ...'
-echo -e '	'$COL_WHITE'[1]'$COL_RESET$COL_BLUE' NEW DATABASE'$COL_RESET' Delete existing Database and create a new one'
-echo -e '	'$COL_WHITE'[2]'$COL_RESET$COL_BLUE' UPDATE DATABASE'$COL_RESET' Check Database and apply all updates'
-echo -e '	'$COL_WHITE'[q/Q]'$COL_RESET$COL_MAGENTA' Exit'$COL_RESET
-while true
-do
-	read -p 'To continue, make a choice and press enter: ' want_to_continue
-	case "${want_to_continue}" in
-1)
-        sudo rm -d -f -r /trinityserver/mysql/data
-        break
-        ;;
-2)
-        break
-        ;;
-Q|q)
-        echo "OK. Bye!"
-        exit
-        ;;
-*)
-        continue
-        ;;
-esac
-done
+echo -e '	'$COL_GREEN'[Create a new Database]'$COL_RESET' To remove the existing database and create a new one, press key '$COL_BLUE'[n/N]'$COL_RESET
+echo -e '	'$COL_MAGENTA'[Update the database]'$COL_RESET' To check the database and apply all updates, press key '$COL_BLUE'[u/U]'$COL_RESET
+echo -e '	'$COL_RED'[Exit the Script]'$COL_RESET' To exit the script, press key '$COL_BLUE'[q/Q]'$COL_RESET
+	while true; do
+		read -p 'To continue, make a choice and press enter [n/u/q]: ' yn
+		case $yn in
+		[Nn]* ) sudo rm -d -f -r /trinityserver/mysql/data
+				break ;;
+		[Uu]* ) break ;;
+		[Qq]* ) echo "OK. Bye!"
+				exit ;;
+		* ) ;;
+		esac
+	done
+fi
 }
 MySQL_pw(){
 echo -en $COL_WHITE' Please enter a new MySQL root password: '$COL_RESET
@@ -137,38 +129,43 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Initializing MySQL directory ...'
 }
 Check_DB(){
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Initializing Database ...'
-if
-pw=$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD 2>/tmp/TDBtool_errorMSG)
-then
+if [[ -d /trinityserver/mysql/data ]]; then
 	if
-	echo -e $COL_GREEN' OK'$COL_RESET
-	MySQL_start
+	pw=$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD 2>/tmp/TDBtool_errorMSG)
 	then
-		echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Testing Database ...'
 		if
-			result=$(sudo /trinityserver/mysql/bin/mysql -u root -p$pw update_info -e "SELECT * FROM world;" 2>/tmp/TDBtool_errorMSG)
+		echo -e $COL_GREEN' OK'$COL_RESET
+		MySQL_start
 		then
-			echo -e $COL_GREEN' OK'$COL_RESET
-				echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Checking if a new Database is required ...'
-				if [ "`echo $result | /usr/bin/awk 'END{print}'`" != "" ]
-				then
-					echo -e $COL_GREEN' NO'$COL_RESET
-					return 0
-				else
-					echo -e $COL_GREEN' YES'$COL_RESET
-					return 1
-				fi
+			echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Testing Database ...'
+			if
+				result=$(sudo /trinityserver/mysql/bin/mysql -u root -p$pw update_info -e "SELECT * FROM world;" 2>/tmp/TDBtool_errorMSG)
+			then
+				echo -e $COL_GREEN' OK'$COL_RESET
+					echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Checking if a new Database is required ...'
+					if [ "`echo $result | /usr/bin/awk 'END{print}'`" != "" ]
+					then
+						echo -e $COL_GREEN' NO'$COL_RESET
+						return 0
+					else
+						echo -e $COL_GREEN' YES'$COL_RESET
+						return 1
+					fi
+			else
+				echo -e $COL_RED' Not valid'$COL_RESET
+				echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+				return 1
+			fi
 		else
-			echo -e $COL_RED' Not valid'$COL_RESET
-			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
 			return 1
 		fi
 	else
+		echo -e $COL_RED' Not valid'$COL_RESET
+		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
 		return 1
 	fi
 else
-	echo -e $COL_RED' Not valid'$COL_RESET
-	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+	echo -e $COL_RED' Not found'$COL_RESET
 	return 1
 fi
 }
@@ -772,11 +769,6 @@ exit 1
 fi
 #backupend
 MySQL_stop
-echo -ne $COL_RED'[WARNING] '$COL_RESET
-read -p "Delete the whole MySQL Database and create a new one? Press [y] to continue or any other key to abort: " -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-	echo
 	echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating new Database ...'
 	sleep 2
 	sudo rm -d -f -r /trinityserver/mysql/data
@@ -793,9 +785,6 @@ then
 			MySQL_stop
 			exit 1
 		fi
-else
-	Main_menu
-fi
 MySQL_stop
 MySQL_start
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Generating MySQL root password ...'
