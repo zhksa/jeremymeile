@@ -1038,6 +1038,7 @@ then
 				fi
 		fi
 fi
+MySQL_restart
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Optimizing all Databases ...'
 if
 sudo /trinityserver/mysql/bin/mysqlcheck -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) -o --all-databases > /dev/null 2>/tmp/TDBtool_errorMSG
