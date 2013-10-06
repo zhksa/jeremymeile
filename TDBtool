@@ -65,7 +65,6 @@ while true
 			break
 		fi
 done
-#useradd $userAcct && echo -e "$userPass\n$userPass\n" | passwd $userAcct > /dev/null 2>&1 && echo " User account has been created." || echo " ERR -- User acount creation failed!"
 echo $userPass
 }
 Remove_dubs(){
@@ -371,9 +370,6 @@ world_update(){
 						file=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
 								if [ "$curvar" = "0" ]; then
 									maxvar=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g' 2>/tmp/TDBtool_errorMSG)
-								fi
-								if [ "$curvar" = "500" ]; then
-									MySQL_restart
 								fi
 										if [ "$file" = "" ]; then
 											if [ "$first" = "0" ]; then
@@ -1041,6 +1037,15 @@ then
 					exit 1
 				fi
 		fi
+fi
+echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Optimizing all Databases ...'
+if
+sudo /trinityserver/mysql/bin/mysqlcheck -u root -p$(sudo /bin/cat /trinityserver/mysql/data/MYSQL_PASSWORD) -o --all-databases > /dev/null 2>/tmp/TDBtool_errorMSG
+then
+echo -e $COL_GREEN' OK'$COL_RESET
+else
+echo -e $COL_RED' error'$COL_RESET
+echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
 fi
 MySQL_stop
 MySQL_kill
