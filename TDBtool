@@ -139,7 +139,7 @@ if [[ -d /trinityserver/mysql/data ]]; then
 		then
 			echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Testing Database ...'
 			if
-				result=$(sudo /trinityserver/mysql/bin/mysql -u root -p$pw update_info -e "SELECT * FROM world;" 2>/tmp/TDBtool_errorMSG)
+				result=$(sudo /trinityserver/mysql/bin/mysql -u root -p$pw update_info -e "SELECT * FROM world ORDER BY file DESC LIMIT 1;" 2>/tmp/TDBtool_errorMSG)
 			then
 				echo -e $COL_GREEN' OK'$COL_RESET
 					echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Checking if a new Database is required ...'
@@ -357,7 +357,7 @@ sleep 2
 }
 world_update(){
 			if
-				f=`sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "SELECT * FROM world;" | /usr/bin/sed '/^$/d' | /usr/bin/awk 'END{print}' 2>/tmp/TDBtool_errorMSG`
+				f=`sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "SELECT * FROM world ORDER BY file DESC LIMIT 1;" | /usr/bin/sed '/^$/d' | /usr/bin/awk 'END{print}' 2>/tmp/TDBtool_errorMSG`
 					if [ "$f" = "file" ]; then
 						echo -e $COL_RED' error'$COL_RESET
 						echo -e 'Update database is empty!'
@@ -389,7 +389,7 @@ world_update(){
 													echo -e $COL_GREEN' OK'$COL_RESET
 														B=$(/usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/head -1)
 															if
-																sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "DELETE FROM world;"
+																#sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "DELETE FROM world;"
 																sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "INSERT INTO world VALUES ('$B');"
 															then
 																world_update
@@ -413,7 +413,7 @@ world_update(){
 }
 auth_update(){
 			if
-				f=`sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "SELECT * FROM auth;" | /usr/bin/sed '/^$/d' | /usr/bin/awk 'END{print}' 2>/tmp/TDBtool_errorMSG`
+				f=`sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "SELECT * FROM auth ORDER BY file DESC LIMIT 1;" | /usr/bin/sed '/^$/d' | /usr/bin/awk 'END{print}' 2>/tmp/TDBtool_errorMSG`
 					if [ "$f" = "file" ]; then
 						echo -e $COL_RED' error'$COL_RESET
 						echo -e 'Update database is empty!'
@@ -448,7 +448,7 @@ auth_update(){
 													echo -e $COL_GREEN' OK'$COL_RESET
 														B=$(/usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/head -1)
 															if
-																sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "DELETE FROM auth;"
+																#sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "DELETE FROM auth;"
 																sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "INSERT INTO auth VALUES ('$B');"
 															then
 																auth_update
@@ -472,7 +472,7 @@ auth_update(){
 }
 characters_update(){
 			if
-				f=`sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "SELECT * FROM characters;" | /usr/bin/sed '/^$/d' | /usr/bin/awk 'END{print}' 2>/tmp/TDBtool_errorMSG`
+				f=`sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "SELECT * FROM characters ORDER BY file DESC LIMIT 1;" | /usr/bin/sed '/^$/d' | /usr/bin/awk 'END{print}' 2>/tmp/TDBtool_errorMSG`
 					if [ "$f" = "file" ]; then
 						echo -e $COL_RED' error'$COL_RESET
 						echo -e 'Update database is empty!'
@@ -507,7 +507,7 @@ characters_update(){
 													echo -e $COL_GREEN' OK'$COL_RESET
 														B=$(/usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/head -1)
 															if
-																sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "DELETE FROM characters;"
+																#sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "DELETE FROM characters;"
 																sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "INSERT INTO characters VALUES ('$B');"
 															then
 																characters_update
