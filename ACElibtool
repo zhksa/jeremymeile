@@ -133,91 +133,81 @@ echo
 		fi
 		echo -e ' - Default ('$osx') [4]'
 		echo -ne $COL_GREEN'To continue chose and press Enter. '$COL_RESET
-		read -p '' prompt
 else
 	echo -e 'Install and initialize XCode first!'
 	exit 1
 fi
 
-if [[ $prompt = "1" ]]
-then
-
-export MACOSX_DEPLOYMENT_TARGET=10.6
-export DEPLOYMENT_TARGET=10.6
-export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
-export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
-export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
-export CFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64"
-export CCFLAGS="-arch i386 -arch x86_64"
-export CXXFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64"
-export LDFLAGS="-arch i386 -arch x86_64"
-echo '#include "ace/config-macosx-snowleopard.h"' > ./ace/config.h
-echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
-echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
-echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
-echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
-echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_snowleopard.GNU' >> ./include/makeinclude/platform_macros.GNU
-echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
-
-fi
-
-if [[ $prompt = "2" ]]
-then
-
-export MACOSX_DEPLOYMENT_TARGET=10.7
-export DEPLOYMENT_TARGET=10.7
-export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-export CFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64"
-export CCFLAGS="-arch i386 -arch x86_64"
-export CXXFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64"
-export LDFLAGS="-arch i386 -arch x86_64"
-echo '#include "ace/config-macosx-lion.h"' > ./ace/config.h
-echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
-echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
-echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
-echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
-echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_lion.GNU' >> ./include/makeinclude/platform_macros.GNU
-echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
-
-fi
-
-if [[ $prompt = "3" ]]
-then
-
-export MACOSX_DEPLOYMENT_TARGET=10.8
-export DEPLOYMENT_TARGET=10.8
-export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-export CFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64"
-export CCFLAGS="-arch i386 -arch x86_64"
-export CXXFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64"
-export LDFLAGS="-arch i386 -arch x86_64"
-echo '#include "ace/config-macosx-mountainlion.h"' > ./ace/config.h
-echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
-echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
-echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
-echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
-echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_mountainlion.GNU' >> ./include/makeinclude/platform_macros.GNU
-echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
-
-fi
-
-if [[ $prompt = "4" ]]
-then
-	
-echo '#include "ace/config-macosx-'$osx'.h"' > ./ace/config.h
-echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
-echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
-echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
-echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
-echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_'$osx'.GNU' >> ./include/makeinclude/platform_macros.GNU
-echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
-
-fi
-
+	while true; do
+		read -p '' yn
+		case $yn in
+		[1]* )	export MACOSX_DEPLOYMENT_TARGET=10.6
+			export DEPLOYMENT_TARGET=10.6
+			export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+			export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+			export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+			export CFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64"
+			export CCFLAGS="-arch i386 -arch x86_64"
+			export CXXFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64"
+			export LDFLAGS="-arch i386 -arch x86_64"
+			echo '#include "ace/config-macosx-snowleopard.h"' > ./ace/config.h
+			echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
+			echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
+			echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_snowleopard.GNU' >> ./include/makeinclude/platform_macros.GNU
+			echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
+			break ;;
+		[2]* ) 
+			export MACOSX_DEPLOYMENT_TARGET=10.7
+			export DEPLOYMENT_TARGET=10.7
+			export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+			export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+			export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+			export CFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64"
+			export CCFLAGS="-arch i386 -arch x86_64"
+			export CXXFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64"
+			export LDFLAGS="-arch i386 -arch x86_64"
+			echo '#include "ace/config-macosx-lion.h"' > ./ace/config.h
+			echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
+			echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
+			echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_lion.GNU' >> ./include/makeinclude/platform_macros.GNU
+			echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
+			break ;;
+		[3]* ) 
+			export MACOSX_DEPLOYMENT_TARGET=10.8
+			export DEPLOYMENT_TARGET=10.8
+			export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+			export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+			export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+			export CFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64"
+			export CCFLAGS="-arch i386 -arch x86_64"
+			export CXXFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64"
+			export LDFLAGS="-arch i386 -arch x86_64"
+			echo '#include "ace/config-macosx-mountainlion.h"' > ./ace/config.h
+			echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
+			echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
+			echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_mountainlion.GNU' >> ./include/makeinclude/platform_macros.GNU
+			echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
+			break ;;
+		[4]* ) 
+			echo '#include "ace/config-macosx-'$osx'.h"' > ./ace/config.h
+			echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
+			echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
+			echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_'$osx'.GNU' >> ./include/makeinclude/platform_macros.GNU
+			echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
+			break ;;
+		[Qq]* ) echo "OK. Bye!"
+				exit ;;
+		* ) ;;
+		esac
+	done
 echo
 echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Building ACE ...'
 	if
