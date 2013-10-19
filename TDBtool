@@ -18,19 +18,13 @@ echo -e '|                                           |'
 echo -e '| TRINITYCORE DATABASE TOOL   '$COL_BLUE'[TDBtool]'$COL_RESET'     |'
 echo -e '#############################################'
 echo
-if
-	sudo -v
-then
-	echo
-else
-	exit
-fi
 Main_menu(){
 if [[ -d /trinityserver/mysql/data ]]
 then
 echo -e 'Welcome to '$COL_BLUE'[TDBtool] '$COL_RESET' ...'
 echo -e '	'$COL_GREEN'[Create a new Database]'$COL_RESET' To remove the existing database and create a new one, press key '$COL_BLUE'[n/N]'$COL_RESET
 echo -e '	'$COL_MAGENTA'[Update the database]'$COL_RESET' To check the database and apply all updates, press key '$COL_BLUE'[u/U]'$COL_RESET
+echo -e '	'$COL_BLUE'[Backup the database]'$COL_RESET' To create a backup from the full database, press key '$COL_BLUE'[b/B]'$COL_RESET
 echo -e '	'$COL_RED'[Exit the Script]'$COL_RESET' To exit the script, press key '$COL_BLUE'[q/Q]'$COL_RESET
 	while true; do
 		read -p 'To continue, make a choice and press enter [n/u/q]: ' yn
@@ -38,6 +32,8 @@ echo -e '	'$COL_RED'[Exit the Script]'$COL_RESET' To exit the script, press key 
 		[Nn]* ) sudo rm -d -f -r /trinityserver/mysql/data
 				break ;;
 		[Uu]* ) break ;;
+		[Bb]* ) Backup_DB
+				break ;;
 		[Qq]* ) echo "OK. Bye!"
 				exit ;;
 		* ) ;;
@@ -624,64 +620,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Testing MySQL ...'
 	fi
 MySQL_stop
 }
-#functions_end
-Main_menu
-MySQL_kill
-if
-	Check_files
-then
-	echo -e $COL_GREEN' OK'$COL_RESET
-else
-	echo -e $COL_RED' error'$COL_RESET
-	echo
-	echo -e $COL_RED$'Some sql files missing!'$COL_RESET
-	echo -e $COL_RED$'Make sure that /trinityserver/sql/ exists.'$COL_RESET
-	echo
-	MySQL_stop
-	exit 1
-fi
-echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Looking for 7z ...'
-if
-	7z > /dev/null 2>&1
-	then
-		echo -e $COL_GREEN' OK'$COL_RESET
-	else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo
-		echo -e $COL_RED'Can not find the 7z command line tool!'$COL_RESET
-		echo -e $COL_RED'You can run the following commands to install 7z:'$COL_RESET
-		echo -e '     ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"'
-		echo -e '     brew install p7zip'
-		echo
-		MySQL_stop
-		exit 1		
-fi
-echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Looking for Base64 ...'
-if
-	base64 -h > /dev/null 2>&1
-	then
-		echo -e $COL_GREEN' OK'$COL_RESET
-	else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo
-		echo -e $COL_RED'Can not find the base64 command line tool!'$COL_RESET
-		echo -e $COL_RED'You can run the following commands to install 7z:'$COL_RESET
-		echo -e '     ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"'
-		echo -e '     brew install base64'
-		echo
-		MySQL_stop
-		exit 1		
-fi
-MySQL_stop
-Check_MySQL_user
-Check_MySQL_group
-if Remove_dubs
-then
-	echo -e $COL_GREEN' OK'$COL_RESET
-else	
-	echo -e $COL_RED' error'$COL_RESET
-fi
-#BACKUP_START
+Backup_DB(){
 if
 	Check_MySQL
 then
@@ -752,7 +691,6 @@ then
 		MySQL_stop
 		exit 1
 	fi
-		DB_update
 	fi
 MySQL_stop
 MySQL_kill
@@ -767,7 +705,73 @@ MySQL_stop
 MySQL_kill
 exit 1
 fi
-#backupend
+}
+#functions_end
+Main_menu
+if
+	sudo -v
+then
+	echo
+else
+	exit
+fi
+MySQL_kill
+if
+	Check_files
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' error'$COL_RESET
+	echo
+	echo -e $COL_RED$'Some sql files missing!'$COL_RESET
+	echo -e $COL_RED$'Make sure that /trinityserver/sql/ exists.'$COL_RESET
+	echo
+	MySQL_stop
+	exit 1
+fi
+echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Looking for 7z ...'
+if
+	7z > /dev/null 2>&1
+	then
+		echo -e $COL_GREEN' OK'$COL_RESET
+	else	
+		echo -e $COL_RED' error'$COL_RESET
+		echo
+		echo -e $COL_RED'Can not find the 7z command line tool!'$COL_RESET
+		echo -e $COL_RED'You can run the following commands to install 7z:'$COL_RESET
+		echo -e '     ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"'
+		echo -e '     brew install p7zip'
+		echo
+		MySQL_stop
+		exit 1		
+fi
+echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Looking for Base64 ...'
+if
+	base64 -h > /dev/null 2>&1
+	then
+		echo -e $COL_GREEN' OK'$COL_RESET
+	else	
+		echo -e $COL_RED' error'$COL_RESET
+		echo
+		echo -e $COL_RED'Can not find the base64 command line tool!'$COL_RESET
+		echo -e $COL_RED'You can run the following commands to install 7z:'$COL_RESET
+		echo -e '     ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"'
+		echo -e '     brew install base64'
+		echo
+		MySQL_stop
+		exit 1		
+fi
+MySQL_stop
+Check_MySQL_user
+Check_MySQL_group
+if Remove_dubs
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else	
+	echo -e $COL_RED' error'$COL_RESET
+fi
+Backup_DB
+DB_update
 MySQL_stop
 	echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating new Database ...'
 	sleep 2
