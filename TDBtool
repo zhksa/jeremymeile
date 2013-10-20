@@ -25,20 +25,33 @@ echo -e 'Welcome to '$COL_BLUE'[TDBtool] '$COL_RESET' ...'
 echo -e '	'$COL_GREEN'[Create a new Database]'$COL_RESET' To remove the existing database and create a new one, press key '$COL_BLUE'[n/N]'$COL_RESET
 echo -e '	'$COL_MAGENTA'[Update the database]'$COL_RESET' To check the database and apply all updates, press key '$COL_BLUE'[u/U]'$COL_RESET
 echo -e '	'$COL_BLUE'[Backup the database]'$COL_RESET' To create a backup from the full database, press key '$COL_BLUE'[b/B]'$COL_RESET
+echo -e '	'$COL_YELLOW'[Internal IP]'$COL_RESET' To set realmlist to your internal ip address, press key '$COL_BLUE'[i/I]'$COL_RESET
+echo -e '	'$COL_YELLOW'[External IP]'$COL_RESET' To set realmlist to your external ip address, press key '$COL_BLUE'[e/E]'$COL_RESET
 echo -e '	'$COL_RED'[Exit the Script]'$COL_RESET' To exit the script, press key '$COL_BLUE'[q/Q]'$COL_RESET
 	while true; do
-		read -p 'To continue, make a choice and press enter [n/u/q]: ' yn
+		read -p 'To continue, make a choice and press enter: ' yn
 		case $yn in
 		[Nn]* ) sudo rm -d -f -r /trinityserver/mysql/data
 				break ;;
 		[Uu]* ) break ;;
 		[Bb]* ) Backup_DB
 				break ;;
+		[Ii]* )	realmlist_set_internal
+				break ;;
+		[Ee]* )	realmlist_set_external
+				break ;;
 		[Qq]* ) echo "OK. Bye!"
 				exit ;;
 		* ) ;;
 		esac
 	done
+fi
+if
+	sudo -v
+then
+	echo
+else
+	exit
 fi
 }
 MySQL_pw(){
@@ -706,15 +719,63 @@ MySQL_kill
 exit 1
 fi
 }
-#functions_end
-Main_menu
+realmlist_set_internal(){
+Check_DB
+MySQL_start
+echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Getting internal ip address ...'
 if
-	sudo -v
+	 INTERNAL=$(ipconfig getifaddr en1) > /dev/null 2>/tmp/TDBtool_errorMSG
 then
-	echo
+	echo -e $COL_GREEN' OK'$COL_RESET
+	echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Setting realmlist to "'$INTERNAL'" ...'
+	if
+		sudo /trinityserver/mysql/bin/mysql -u root -p$(cat /trinityserver/mysql/data/MYSQL_PASSWORD) auth -e "UPDATE realmlist SET address = '$INTERNAL';" > /dev/null 2>/tmp/TDBtool_errorMSG
+	then
+		echo -e $COL_GREEN' OK'$COL_RESET
+	else
+		echo -e $COL_RED' error'$COL_RESET
+		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+		MySQL_stop
+		Main_menu
+	fi
 else
-	exit
+	echo -e $COL_RED' error'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+	MySQL_stop
+	Main_menu
 fi
+MySQL_stop
+}
+realmlist_set_external(){
+Check_DB
+MySQL_start
+echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Getting internal ip address ...'
+if
+	 EXTERNAL=$(curl -s http://checkip.dyndns.org | grep -Eo '([0-9]*\.){3}[0-9]*') > /dev/null 2>/tmp/TDBtool_errorMSG
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+	echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Setting realmlist to "'$EXTERNAL'" ...'
+	if
+		sudo /trinityserver/mysql/bin/mysql -u root -p$(cat /trinityserver/mysql/data/MYSQL_PASSWORD) auth -e "UPDATE realmlist SET address = '$EXTERNAL';" > /dev/null 2>/tmp/TDBtool_errorMSG
+	then
+		echo -e $COL_GREEN' OK'$COL_RESET
+	else
+		echo -e $COL_RED' error'$COL_RESET
+		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+		MySQL_stop
+		Main_menu
+	fi
+else
+	echo -e $COL_RED' error'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+	MySQL_stop
+	Main_menu
+fi
+MySQL_stop
+}
+#functions_end
+
+Main_menu
 MySQL_kill
 if
 	Check_files
