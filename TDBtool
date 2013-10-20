@@ -148,7 +148,7 @@ if [[ -d /trinityserver/mysql/data ]]; then
 		then
 			echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Testing Database ...'
 			if
-				result=$(sudo /trinityserver/mysql/bin/mysql -u root -p$pw update_info -e "SELECT * FROM world ORDER BY file DESC LIMIT 1;" 2>/tmp/TDBtool_errorMSG)
+				result=$(sudo /trinityserver/mysql/bin/mysql -u root -p$pw update_info -e "SELECT * FROM world;" 2>/tmp/TDBtool_errorMSG)
 			then
 				echo -e $COL_GREEN' OK'$COL_RESET
 					echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Checking if a new Database is required ...'
@@ -705,9 +705,10 @@ then
 		exit 1
 	fi
 	fi
-MySQL_stop
-MySQL_kill
-exit 1
+#MySQL_stop
+#MySQL_kill
+#exit 1
+DB_update
 fi
 else
 echo -e $COL_RED' error'$COL_RESET
@@ -834,9 +835,6 @@ else
 	echo -e $COL_RED' error'$COL_RESET
 fi
 Backup_DB
-if [[ -d /trinityserver/mysql/data ]]; then
-DB_update
-fi
 MySQL_stop
 	echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating new Database ...'
 	sleep 2
