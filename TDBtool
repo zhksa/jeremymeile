@@ -750,7 +750,7 @@ exit
 realmlist_set_external(){
 Check_DB
 MySQL_start
-echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Getting internal ip address ...'
+echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Getting external ip address ...'
 if
 	 EXTERNAL=$(curl -s http://checkip.dyndns.org | grep -Eo '([0-9]*\.){3}[0-9]*') > /dev/null 2>/tmp/TDBtool_errorMSG
 then
@@ -770,10 +770,10 @@ else
 	echo -e $COL_RED' error'$COL_RESET
 	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
 	MySQL_stop
-	exit
+	Main_menu
 fi
 MySQL_stop
-Main_menu
+exit
 }
 #functions_end
 
