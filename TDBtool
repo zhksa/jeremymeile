@@ -18,6 +18,13 @@ echo -e '|                                           |'
 echo -e '| TRINITYCORE DATABASE TOOL   '$COL_BLUE'[TDBtool]'$COL_RESET'     |'
 echo -e '#############################################'
 echo
+if
+	sudo -v
+then
+	echo
+else
+	exit
+fi
 Main_menu(){
 if [[ -d /trinityserver/mysql/data ]]
 then
@@ -45,13 +52,6 @@ echo -e '	'$COL_RED'[Exit the Script]'$COL_RESET' To exit the script, press key 
 		* ) ;;
 		esac
 	done
-fi
-if
-	sudo -v
-then
-	echo
-else
-	exit
 fi
 }
 MySQL_pw(){
@@ -729,7 +729,7 @@ then
 	echo -e $COL_GREEN' OK'$COL_RESET
 	echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Setting realmlist to "'$INTERNAL'" ...'
 	if
-		sudo /trinityserver/mysql/bin/mysql -u root -p$(cat /trinityserver/mysql/data/MYSQL_PASSWORD) auth -e "UPDATE realmlist SET address = '$INTERNAL';" > /dev/null 2>/tmp/TDBtool_errorMSG
+		sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo cat /trinityserver/mysql/data/MYSQL_PASSWORD) auth -e "UPDATE realmlist SET address = '$INTERNAL';" > /dev/null 2>/tmp/TDBtool_errorMSG
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else
@@ -745,6 +745,7 @@ else
 	Main_menu
 fi
 MySQL_stop
+exit
 }
 realmlist_set_external(){
 Check_DB
@@ -756,7 +757,7 @@ then
 	echo -e $COL_GREEN' OK'$COL_RESET
 	echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Setting realmlist to "'$EXTERNAL'" ...'
 	if
-		sudo /trinityserver/mysql/bin/mysql -u root -p$(cat /trinityserver/mysql/data/MYSQL_PASSWORD) auth -e "UPDATE realmlist SET address = '$EXTERNAL';" > /dev/null 2>/tmp/TDBtool_errorMSG
+		sudo /trinityserver/mysql/bin/mysql -u root -p$(sudo cat /trinityserver/mysql/data/MYSQL_PASSWORD) auth -e "UPDATE realmlist SET address = '$EXTERNAL';" > /dev/null 2>/tmp/TDBtool_errorMSG
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else
@@ -769,9 +770,10 @@ else
 	echo -e $COL_RED' error'$COL_RESET
 	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
 	MySQL_stop
-	Main_menu
+	exit
 fi
 MySQL_stop
+Main_menu
 }
 #functions_end
 
@@ -832,7 +834,9 @@ else
 	echo -e $COL_RED' error'$COL_RESET
 fi
 Backup_DB
+if [[ -d /trinityserver/mysql/data ]]; then
 DB_update
+fi
 MySQL_stop
 	echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating new Database ...'
 	sleep 2
