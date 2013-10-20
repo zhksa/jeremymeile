@@ -709,6 +709,7 @@ then
 #MySQL_kill
 #exit 1
 DB_update
+exit
 fi
 else
 echo -e $COL_RED' error'$COL_RESET
