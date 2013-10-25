@@ -30,7 +30,7 @@ echo
 echo -e '#############################################'
 echo -e '| JEREMYMEILE.CH                            |'
 echo -e '|                                           |'
-echo -e '| GNU Readline builder   '$COL_BLUE'[Readlinetool]'$COL_RESET'               |'
+echo -e '| GNU Readline builder   '$COL_BLUE'[Readlinetool]'$COL_RESET'     |'
 echo -e '#############################################'
 echo
 if
