@@ -43,21 +43,21 @@ fi
 cd /usr/local
 echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Checking source ...'
 if
-	test -f ~/Downloads/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/TDBtool_errorMSG
+	test -f ~/Downloads/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 then
 	if [ `echo $(md5 -q ~/Downloads/ACE-6.2.1.tar.gz)` != "119a8b1310c6dd817a674a0c2f9679e8" ]
 	then
 		echo -e $COL_RED' Not found'$COL_RESET
 		echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Getting source ...'
 		cd ~/Downloads
-		sudo rm -d -f -r ACE-6.2.1.tar.gz > /dev/null 2>/tmp/TDBtool_errorMSG
+		sudo rm -d -f -r ACE-6.2.1.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 		if
-			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/TDBtool_errorMSG
+			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
 		else
 			echo -e $COL_RED' error'$COL_RESET
-			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Acetool_errorMSG)$COL_RESET
 			exit 1
 		fi
 	else
@@ -69,12 +69,12 @@ else
 	cd ~/Downloads
 	rm -d -f -r ACE-6.2.1.tar.gz
 		if
-			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/TDBtool_errorMSG
+			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
 		else
 			echo -e $COL_RED' error'$COL_RESET
-			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Acetool_errorMSG)$COL_RESET
 			exit 1
 		fi
 fi
@@ -82,7 +82,7 @@ get_path
 echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Preparing source ...'
 if
 	cd ~/Downloads
-	sudo rm -d -f -r ~/Downloads/ACE_wrappers > /dev/null 2>/tmp/TDBtool_errorMSG
+	sudo rm -d -f -r ~/Downloads/ACE_wrappers > /dev/null 2>/tmp/Acetool_errorMSG
 	gzcat ~/Downloads/ACE-6.2.1.tar.gz | tar -xpf -
 	cd ~/Downloads/ACE_wrappers
 	echo 'export ACE_ROOT=$(pwd)' > bash_profile
@@ -94,7 +94,7 @@ then
 	echo -e $COL_GREEN' OK'$COL_RESET
 else
 	echo -e $COL_RED' error'$COL_RESET
-	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Acetool_errorMSG)$COL_RESET
 	exit 1
 fi
 
@@ -143,12 +143,12 @@ fi
 		case $yn in
 		[1]* )	export MACOSX_DEPLOYMENT_TARGET=10.6
 			export DEPLOYMENT_TARGET=10.6
-			export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
-			export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
-			export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
-			export CFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64"
+			export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+			export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+			export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+			export CFLAGS="-mmacosx-version-min=10.6 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64"
 			export CCFLAGS="-arch i386 -arch x86_64"
-			export CXXFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64"
+			export CXXFLAGS="-mmacosx-version-min=10.6 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64"
 			export LDFLAGS="-arch i386 -arch x86_64"
 			echo '#include "ace/config-macosx-snowleopard.h"' > ./ace/config.h
 			echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
@@ -161,12 +161,12 @@ fi
 		[2]* ) 
 			export MACOSX_DEPLOYMENT_TARGET=10.7
 			export DEPLOYMENT_TARGET=10.7
-			export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-			export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-			export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-			export CFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64"
+			export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+			export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+			export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+			export CFLAGS="-mmacosx-version-min=10.7 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64"
 			export CCFLAGS="-arch i386 -arch x86_64"
-			export CXXFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64"
+			export CXXFLAGS="-mmacosx-version-min=10.7 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64"
 			export LDFLAGS="-arch i386 -arch x86_64"
 			echo '#include "ace/config-macosx-lion.h"' > ./ace/config.h
 			echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
@@ -179,12 +179,12 @@ fi
 		[3]* ) 
 			export MACOSX_DEPLOYMENT_TARGET=10.8
 			export DEPLOYMENT_TARGET=10.8
-			export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-			export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-			export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-			export CFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64"
+			export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+			export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+			export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+			export CFLAGS="-mmacosx-version-min=10.8 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64"
 			export CCFLAGS="-arch i386 -arch x86_64"
-			export CXXFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64"
+			export CXXFLAGS="-mmacosx-version-min=10.8 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64"
 			export LDFLAGS="-arch i386 -arch x86_64"
 			echo '#include "ace/config-macosx-mountainlion.h"' > ./ace/config.h
 			echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
@@ -212,7 +212,7 @@ echo
 echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Building ACE ...'
 	if
 		cd ace
-		make -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/TDBtool_errorMSG
+		make -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/Acetool_errorMSG
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 		
@@ -224,14 +224,14 @@ echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Building ACE ...'
 		
 		echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Installing ACE ...'
 		if
-			sudo ACE_ROOT=$ACE_ROOT make install > /dev/null 2>/tmp/TDBtool_errorMSG
-			sudo install_name_tool -id $prefix/lib/libACE_Compression.dylib $prefix/lib/libACE_Compression.dylib > /dev/null 2>/tmp/TDBtool_errorMSG
-			sudo install_name_tool -id $prefix/lib/libACE_ETCL_Parser.dylib $prefix/lib/libACE_ETCL_Parser.dylib > /dev/null 2>/tmp/TDBtool_errorMSG
-			sudo install_name_tool -id $prefix/lib/libACE_ETCL.dylib $prefix/lib/libACE_ETCL.dylib > /dev/null 2>/tmp/TDBtool_errorMSG
-			sudo install_name_tool -id $prefix/lib/libACE_Monitor_Control.dylib $prefix/lib/libACE_Monitor_Control.dylib > /dev/null 2>/tmp/TDBtool_errorMSG
-			sudo install_name_tool -id $prefix/lib/libACE_RLECompression.dylib $prefix/lib/libACE_RLECompression.dylib > /dev/null 2>/tmp/TDBtool_errorMSG
-			sudo install_name_tool -id $prefix/lib/libACE_SSL.dylib $prefix/lib/libACE_SSL.dylib > /dev/null 2>/tmp/TDBtool_errorMSG
-			sudo install_name_tool -id $prefix/lib/libACE.dylib $prefix/lib/libACE.dylib > /dev/null 2>/tmp/TDBtool_errorMSG
+			sudo ACE_ROOT=$ACE_ROOT make install > /dev/null 2>/tmp/Acetool_errorMSG
+			sudo install_name_tool -id $prefix/lib/libACE_Compression.dylib $prefix/lib/libACE_Compression.dylib > /dev/null 2>/tmp/Acetool_errorMSG
+			sudo install_name_tool -id $prefix/lib/libACE_ETCL_Parser.dylib $prefix/lib/libACE_ETCL_Parser.dylib > /dev/null 2>/tmp/Acetool_errorMSG
+			sudo install_name_tool -id $prefix/lib/libACE_ETCL.dylib $prefix/lib/libACE_ETCL.dylib > /dev/null 2>/tmp/Acetool_errorMSG
+			sudo install_name_tool -id $prefix/lib/libACE_Monitor_Control.dylib $prefix/lib/libACE_Monitor_Control.dylib > /dev/null 2>/tmp/Acetool_errorMSG
+			sudo install_name_tool -id $prefix/lib/libACE_RLECompression.dylib $prefix/lib/libACE_RLECompression.dylib > /dev/null 2>/tmp/Acetool_errorMSG
+			sudo install_name_tool -id $prefix/lib/libACE_SSL.dylib $prefix/lib/libACE_SSL.dylib > /dev/null 2>/tmp/Acetool_errorMSG
+			sudo install_name_tool -id $prefix/lib/libACE.dylib $prefix/lib/libACE.dylib > /dev/null 2>/tmp/Acetool_errorMSG
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
 					echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Patching ACE ...'
@@ -242,13 +242,13 @@ echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Building ACE ...'
 						echo -e $COL_GREEN' OK'$COL_RESET
 					else
 						echo -e $COL_RED' error'$COL_RESET
-						echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET					
+						echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Acetool_errorMSG)$COL_RESET					
 					fi
 		else
 			echo -e $COL_RED' error'$COL_RESET
-			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Acetool_errorMSG)$COL_RESET
 		fi
 	else
 		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Acetool_errorMSG)$COL_RESET
 	fi

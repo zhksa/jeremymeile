@@ -1,75 +1,199 @@
 #!/bin/bash
-cd ~/Downloads
-curl -O ftp://ftp.cwru.edu/pub/bash/readline-6.2.tar.gz
-rm -d -f -r  ~/Downloads/readline-6.2
-rm -d -f -r  /Applications/gcc44/readline
-gzcat ~/Downloads/readline-6.2.tar.gz | tar -xpf -
-cd readline-6.2
-mkdir build
-cd build
-
-echo -e "		MacOSX10.6.sdk, Universal [1]"
-echo -e "		MacOSX10.7.sdk, Universal [2]"
-echo -e "		MacOSX10.8.sdk, Universal [3]"
-echo -e "		Default [4]"
-read -p "To continue chose and press Enter. " prompt
-if [[ $prompt = "1" ]]
+# Colors
+ESC_SEQ="\x1b["
+COL_RESET=$ESC_SEQ"39;49;00m"
+COL_RED=$ESC_SEQ"31;01m"
+COL_GREEN=$ESC_SEQ"32;01m"
+COL_YELLOW=$ESC_SEQ"33;01m"
+COL_BLUE=$ESC_SEQ"34;01m"
+COL_MAGENTA=$ESC_SEQ"35;01m"
+COL_CYAN=$ESC_SEQ"36;01m"
+COL_GRAY=$ESC_SEQ"30;01m"
+COL_WHITE=$ESC_SEQ"37;01m"
+get_path(){
+echo -e 'Welcome to '$COL_BLUE'[Readlinetool] '$COL_RESET' ...'
+while true
+do
+	echo -ne $COL_GREEN'Enter install path: '$COL_RESET
+	read -p '' prefix
+		if sudo test -d $prefix; then
+			prefix=$prefix'/readline'
+			echo -e 'Installing GNU Readline in: '$prefix
+			break
+		else
+			echo -e 'Path does not exists'
+			continue
+		fi
+done
+}
+echo
+echo -e '#############################################'
+echo -e '| JEREMYMEILE.CH                            |'
+echo -e '|                                           |'
+echo -e '| GNU Readline builder   '$COL_BLUE'[Readlinetool]'$COL_RESET'               |'
+echo -e '#############################################'
+echo
+if
+	sudo -v
 then
-
-export MACOSX_DEPLOYMENT_TARGET=10.6
-export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
-export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
-export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
-export CFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
-export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
-export CXXFLAGS="-mmacosx-version-min=10.6 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64 -g -Os -pipe"
-export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
-
+	echo
+else
+	exit
+fi
+cd /usr/local
+echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Checking source ...'
+if
+	test -f ~/Downloads/readline-6.2.tar.gz > /dev/null 2>/tmp/Readlinetool_errorMSG
+then
+	if [ `echo $(md5 -q ~/Downloads/readline-6.2.tar.gz)` != "67948acb2ca081f23359d0256e9a271c" ]
+	then
+		echo -e $COL_RED' Not found'$COL_RESET
+		echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Getting source ...'
+		cd ~/Downloads
+		sudo rm -d -f -r readline-6.2.tar.gz > /dev/null 2>/tmp/Readlinetool_errorMSG
+		if
+			curl -O -s ftp://ftp.cwru.edu/pub/bash/readline-6.2.tar.gz > /dev/null 2>/tmp/Readlinetool_errorMSG
+		then
+			echo -e $COL_GREEN' OK'$COL_RESET
+		else
+			echo -e $COL_RED' error'$COL_RESET
+			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Readlinetool_errorMSG)$COL_RESET
+			exit 1
+		fi
+	else
+		echo -e $COL_GREEN' OK'$COL_RESET
+	fi
+else
+	echo -e $COL_RED' Not found'$COL_RESET
+	echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Getting source ...'
+	cd ~/Downloads
+	rm -d -f -r readline-6.2.tar.gz
+		if
+			curl -O -s ftp://ftp.cwru.edu/pub/bash/readline-6.2.tar.gz > /dev/null 2>/tmp/Readlinetool_errorMSG
+		then
+			echo -e $COL_GREEN' OK'$COL_RESET
+		else
+			echo -e $COL_RED' error'$COL_RESET
+			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Readlinetool_errorMSG)$COL_RESET
+			exit 1
+		fi
+fi
+get_path
+echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Preparing source ...'
+if
+	cd ~/Downloads
+	sudo rm -d -f -r ~/Downloads/readline-6.2 > /dev/null 2>/tmp/Readlinetool_errorMSG
+	gzcat ~/Downloads/readline-6.2.tar.gz | tar -xpf -
+	cd readline-6.2
+	mkdir build
+	cd build
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' error'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Readlinetool_errorMSG)$COL_RESET
+	exit 1
 fi
 
-if [[ $prompt = "2" ]]
+if f=$(xcode-select --print-path)
 then
-
-export MACOSX_DEPLOYMENT_TARGET=10.7
-export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-export CFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
-export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
-export CXXFLAGS="-mmacosx-version-min=10.7 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64 -g -Os -pipe"
-export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
-
+echo
+	echo -e $COL_GREEN'Building GNU Readline with one of the following parameters:'$COL_RESET
+		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk'
+		then
+			echo -e ' - Use MacOSX10.6.sdk, Universal [1]'
+		fi
+		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk'
+		then
+			echo -e ' - Use MacOSX10.7.sdk, Universal [2]'
+		fi
+		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk'
+		then
+			echo -e ' - Use MacOSX10.8.sdk, Universal [3]'
+		fi
+		echo -e ' - Default ('$osx') [4]'
+		echo -ne $COL_GREEN'To continue chose and press Enter. '$COL_RESET
+else
+	echo -e 'Install and initialize XCode first!'
+	exit 1
 fi
 
-if [[ $prompt = "3" ]]
-then
+	while true; do
+		read -p '' yn
+		case $yn in
+		[1]* )	export MACOSX_DEPLOYMENT_TARGET=10.6
+				export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+				export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+				export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+				export CFLAGS="-mmacosx-version-min=10.6 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
+				export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
+				export CXXFLAGS="-mmacosx-version-min=10.6 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64 -g -Os -pipe"
+				export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
+				break ;;
+		[2]* )	export MACOSX_DEPLOYMENT_TARGET=10.7
+				export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+				export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+				export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+				export CFLAGS="-mmacosx-version-min=10.7 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
+				export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
+				export CXXFLAGS="-mmacosx-version-min=10.7 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64 -g -Os -pipe"
+				export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
+				break ;;
+		[3]* )	export MACOSX_DEPLOYMENT_TARGET=10.8
+				export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+				export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+				export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+				export CFLAGS="-mmacosx-version-min=10.8 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
+				export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
+				export CXXFLAGS="-mmacosx-version-min=10.8 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64 -g -Os -pipe"
+				export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
+				break ;;
+		[4]* )	archi=$(sysctl -n hw.machine)
+				export CFLAGS="-arch $archi -g -Os -pipe -no-cpp-precomp"
+				export CCFLAGS="-arch $archi -g -Os -pipe"
+				export CXXFLAGS="-arch $archi -g -Os -pipe"
+				export LDFLAGS="-arch $archi -bind_at_load"
+				break ;;
+		[Qq]* ) echo "OK. Bye!"
+				exit ;;
+		* ) ;;
+		esac
+	done
 
-export MACOSX_DEPLOYMENT_TARGET=10.8
-export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-export CFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
-export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
-export CXXFLAGS="-mmacosx-version-min=10.8 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64 -g -Os -pipe"
-export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
-
-fi
-
-if [[ $prompt = "4" ]]
-then
-
-archi=$(sysctl -n hw.machine)
-export CFLAGS="-arch $archi -g -Os -pipe -no-cpp-precomp"
-export CCFLAGS="-arch $archi -g -Os -pipe"
-export CXXFLAGS="-arch $archi -g -Os -pipe"
-export LDFLAGS="-arch $archi -bind_at_load"
-
-fi
-
-../configure --prefix=/Applications/gcc44/readline --disable-static --enable-shared
-cd shlib
-sed -e 's/-dynamic/-dynamiclib/' Makefile > Makefile.good
-mv Makefile.good Makefile
-cd ..
-make -j $(sysctl -n hw.ncpu)
-make install
+echo
+echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Configurating Readline ...'
+	if
+		../configure --prefix=/Applications/gcc44/readline --disable-static --enable-shared > /dev/null 2>/tmp/Readlinetool_errorMSG
+		cd shlib
+		sed -e 's/-dynamic/-dynamiclib/' Makefile > Makefile.good
+		mv Makefile.good Makefile
+		cd ..
+	then
+		echo -e $COL_GREEN' OK'$COL_RESET
+		echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Building Readline ...'
+		if
+		make -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/Readlinetool_errorMSG
+		then
+			echo -e $COL_GREEN' OK'$COL_RESET
+			sudo -v
+			echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Installing Readline ...'
+				if
+					sudo make install > /dev/null 2>/tmp/Readlinetool_errorMSG
+				then
+					echo -e $COL_GREEN' OK'$COL_RESET
+				else
+					echo -e $COL_RED' error'$COL_RESET
+					echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Readlinetool_errorMSG)$COL_RESET
+					exit 1
+				fi
+		else
+			echo -e $COL_RED' error'$COL_RESET
+			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Readlinetool_errorMSG)$COL_RESET
+			exit 1
+		fi
+	else
+		echo -e $COL_RED' error'$COL_RESET
+		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Readlinetool_errorMSG)$COL_RESET
+		exit 1
+	fi
+		
