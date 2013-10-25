@@ -163,7 +163,7 @@ fi
 echo
 echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Configurating Readline ...'
 	if
-		../configure --prefix=/Applications/gcc44/readline --disable-static --enable-shared > /dev/null 2>/tmp/Readlinetool_errorMSG
+		../configure --prefix=$prefix --disable-static --enable-shared > /dev/null 2>/tmp/Readlinetool_errorMSG
 		cd shlib
 		sed -e 's/-dynamic/-dynamiclib/' Makefile > Makefile.good
 		mv Makefile.good Makefile
