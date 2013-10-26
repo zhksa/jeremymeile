@@ -95,6 +95,27 @@ else
 	exit 1
 fi
 
+	if [ $(sw_vers -productVersion | cut -c 1-4) = "10.9" ]
+	then
+		osx="mavericks"
+	fi
+	if [ $(sw_vers -productVersion | cut -c 1-4) = "10.8" ]
+	then
+		osx="mountainlion"
+	fi
+	if [ $(sw_vers -productVersion | cut -c 1-4) = "10.7" ]
+	then
+		osx="lion"
+	fi
+	if [ $(sw_vers -productVersion | cut -c 1-4) = "10.6" ]
+	then
+		osx="snowleopard"
+	fi
+	if [ $(sw_vers -productVersion | cut -c 1-4) = "10.5" ]
+	then
+		osx="leopard"
+	fi
+
 if f=$(xcode-select --print-path)
 then
 echo
