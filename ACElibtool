@@ -52,16 +52,16 @@ fi
 cd /usr/local
 echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Checking source ...'
 if
-	test -f ~/Downloads/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
+	test -f ~/Downloads/ACE-6.2.2.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 then
-	if [ `echo $(md5 -q ~/Downloads/ACE-6.2.1.tar.gz)` != "119a8b1310c6dd817a674a0c2f9679e8" ]
+	if [ `echo $(md5 -q ~/Downloads/ACE-6.2.2.tar.gz)` != "2613f0795ae25feeb1182a5b2c92bd2e" ]
 	then
 		echo -e $COL_RED' Not found'$COL_RESET
 		echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Getting source ...'
 		cd ~/Downloads
-		sudo rm -d -f -r ACE-6.2.1.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
+		sudo rm -d -f -r ACE-6.2.2.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 		if
-			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
+			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.2.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
 		else
@@ -76,9 +76,9 @@ else
 	echo -e $COL_RED' Not found'$COL_RESET
 	echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Getting source ...'
 	cd ~/Downloads
-	rm -d -f -r ACE-6.2.1.tar.gz
+	rm -d -f -r ACE-6.2.2.tar.gz
 		if
-			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
+			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.2.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
 		else
@@ -92,7 +92,7 @@ echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Preparing source ...'
 if
 	cd ~/Downloads
 	sudo rm -d -f -r ~/Downloads/ACE_wrappers > /dev/null 2>/tmp/Acetool_errorMSG
-	gzcat ~/Downloads/ACE-6.2.1.tar.gz | tar -xpf -
+	gzcat ~/Downloads/ACE-6.2.2.tar.gz | tar -xpf -
 	cd ~/Downloads/ACE_wrappers
 	echo 'export ACE_ROOT=$(pwd)' > bash_profile
 	echo 'export ACE_ROOT=$ACE_ROOT' >> bash_profile
