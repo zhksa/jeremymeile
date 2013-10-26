@@ -33,6 +33,15 @@ echo -e '|                                           |'
 echo -e '| GNU Readline builder   '$COL_BLUE'[Readlinetool]'$COL_RESET'     |'
 echo -e '#############################################'
 echo
+echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Looking for headers ...'
+if [[ -d /usr/include ]]
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' Not found, running "xcode-select --install"'$COL_RESET
+	xcode-select --install
+	exit 1
+fi
 if
 	sudo -v
 then

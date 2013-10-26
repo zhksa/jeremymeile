@@ -25,6 +25,17 @@ then
 else
 	exit
 fi
+
+echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Looking for headers ...'
+if [[ -d /usr/include ]]
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' Not found, running "xcode-select --install"'$COL_RESET
+	xcode-select --install
+	exit 1
+fi
+
 Main_menu(){
 if [[ -d /trinityserver/mysql/data ]]
 then
