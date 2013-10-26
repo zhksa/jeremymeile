@@ -22,6 +22,7 @@ echo
 			export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 			export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 			export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+			echo $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
 		fi
 		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk'
 		then
@@ -29,11 +30,13 @@ echo
 			export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
 			export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
 			export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+			echo $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
 		fi
 else
 	echo -e 'Install and initialize XCode first!'
 	exit 1
 fi
+echo 
 INSTALL_PATH="/Applications/gcc47"
 cd ~/Downloads
 rm -d -f -r gmp-5.1.1
@@ -71,11 +74,11 @@ make install
 cd ~/Downloads
 rm -d -f -r gcc-4.7.3
 rm -d -f -r gcc-4.7.3.tar.bz2
-curl -O http://gcc-uk.internet.bs/releases/gcc-4.7.3/gcc-4.7.3.tar.bz2
+curl -O http://gcc-uk.internet.bs/releases/gcc-4.7.3/gcc-4.7.3.tar.bz2 > /dev/null 2>/tmp/Acetool_errorMSG
 tar -jxvf gcc-4.7.3.tar.bz2
 cd gcc-4.7.3
 mkdir build
 cd build
-../configure --enable-checking=release --program-suffix=-4.7 --enable-languages=c,c++,fortran --prefix=$INSTALL_PATH --with-gmp=$INSTALL_PATH --with-mpfr=$INSTALL_PATH --with-mpc=$INSTALL_PATH
+../configure --enable-checking=release --program-suffix=-4.7 --enable-languages=c,c++,fortran --prefix=$INSTALL_PATH --with-gmp=$INSTALL_PATH --with-mpfr=$INSTALL_PATH --with-mpc=$INSTALL_PATH > /dev/null 2>/tmp/Acetool_errorMSG
 make -j $(sysctl -n hw.ncpu)
-make install
+make install > /dev/null
