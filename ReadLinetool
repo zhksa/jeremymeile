@@ -18,8 +18,12 @@ do
 	read -p '' prefix
 		if sudo test -d $prefix; then
 			prefix=$prefix'/readline'
-			echo -e 'Installing GNU Readline in: '$prefix
-			break
+			if [ `(echo $prefix)` = "/readline" ]; then
+				continue
+			else
+				echo -e 'Installing GNU Readline in: '$prefix
+				break
+			fi
 		else
 			echo -e 'Path does not exists'
 			continue

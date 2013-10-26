@@ -18,8 +18,12 @@ do
 	read -p '' prefix
 		if sudo test -d $prefix; then
 			prefix=$prefix'/ace'
-			echo -e 'Installing ACE in: '$prefix
-			break
+			if [ `(echo $prefix)` = "/ace" ]; then
+				continue
+			else
+				echo -e 'Installing ACE in: '$prefix
+				break
+			fi
 		else
 			echo -e 'Path does not exists'
 			continue
