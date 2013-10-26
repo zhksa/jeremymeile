@@ -135,7 +135,11 @@ echo
 		then
 			echo -e ' - Use MacOSX10.8.sdk, Universal [3]'
 		fi
-		echo -e ' - Default ('$osx') [4]'
+		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk'
+		then
+			echo -e ' - Use MacOSX10.9.sdk, Universal [4]'
+		fi
+		echo -e ' - Default ('$osx') [5]'
 		echo -ne $COL_GREEN'To continue chose and press Enter. '$COL_RESET
 else
 	echo -e 'Install and initialize XCode first!'
@@ -199,6 +203,24 @@ fi
 			echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
 			break ;;
 		[4]* ) 
+			export MACOSX_DEPLOYMENT_TARGET=10.9
+			export DEPLOYMENT_TARGET=10.9
+			export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+			export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+			export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+			export CFLAGS="-mmacosx-version-min=10.9 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -arch i386 -arch x86_64"
+			export CCFLAGS="-arch i386 -arch x86_64"
+			export CXXFLAGS="-mmacosx-version-min=10.9 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -arch i386 -arch x86_64"
+			export LDFLAGS="-arch i386 -arch x86_64"
+			echo '#include "ace/config-macosx-mountainlion.h"' > ./ace/config.h
+			echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
+			echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
+			echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_mountainlion.GNU' >> ./include/makeinclude/platform_macros.GNU
+			echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
+			break ;;
+		[5]* ) 
 			echo '#include "ace/config-macosx-'$osx'.h"' > ./ace/config.h
 			echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
 			echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU

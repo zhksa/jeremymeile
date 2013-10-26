@@ -132,6 +132,10 @@ echo
 		then
 			echo -e ' - Use MacOSX10.8.sdk, Universal [3]'
 		fi
+		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk'
+		then
+			echo -e ' - Use MacOSX10.9.sdk, Universal [3]'
+		fi
 		echo -e ' - Default ('$osx') [4]'
 		echo -ne $COL_GREEN'To continue chose and press Enter. '$COL_RESET
 else
@@ -146,34 +150,43 @@ fi
 				export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
 				export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
 				export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
-				export CFLAGS="-mmacosx-version-min=10.6 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
-				export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
-				export CXXFLAGS="-mmacosx-version-min=10.6 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64 -g -Os -pipe"
-				export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
+				export CFLAGS="-mmacosx-version-min=10.6 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64"
+				export CCFLAGS="-arch i386 -arch x86_64"
+				export CXXFLAGS="-mmacosx-version-min=10.6 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64"
+				export LDFLAGS="-arch i386 -arch x86_64"
 				break ;;
 		[2]* )	export MACOSX_DEPLOYMENT_TARGET=10.7
 				export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
 				export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
 				export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-				export CFLAGS="-mmacosx-version-min=10.7 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
-				export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
-				export CXXFLAGS="-mmacosx-version-min=10.7 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64 -g -Os -pipe"
-				export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
+				export CFLAGS="-mmacosx-version-min=10.7 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64"
+				export CCFLAGS="-arch i386 -arch x86_64"
+				export CXXFLAGS="-mmacosx-version-min=10.7 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64"
+				export LDFLAGS="-arch i386 -arch x86_64"
 				break ;;
 		[3]* )	export MACOSX_DEPLOYMENT_TARGET=10.8
 				export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 				export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 				export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-				export CFLAGS="-mmacosx-version-min=10.8 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64 -g -Os -pipe -no-cpp-precomp"
-				export CCFLAGS="-arch i386 -arch x86_64 -g -Os -pipe"
-				export CXXFLAGS="-mmacosx-version-min=10.8 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64 -g -Os -pipe"
-				export LDFLAGS="-arch i386 -arch x86_64 -bind_at_load"
+				export CFLAGS="-mmacosx-version-min=10.8 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64"
+				export CCFLAGS="-arch i386 -arch x86_64"
+				export CXXFLAGS="-mmacosx-version-min=10.8 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64"
+				export LDFLAGS="-arch i386 -arch x86_64"
 				break ;;
-		[4]* )	archi=$(sysctl -n hw.machine)
-				export CFLAGS="-arch $archi -g -Os -pipe -no-cpp-precomp"
-				export CCFLAGS="-arch $archi -g -Os -pipe"
-				export CXXFLAGS="-arch $archi -g -Os -pipe"
-				export LDFLAGS="-arch $archi -bind_at_load"
+		[4]* )	export MACOSX_DEPLOYMENT_TARGET=10.9
+				export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+				export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+				export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+				export CFLAGS="-mmacosx-version-min=10.9 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -arch i386 -arch x86_64"
+				export CCFLAGS="-arch i386 -arch x86_64"
+				export CXXFLAGS="-mmacosx-version-min=10.9 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -arch i386 -arch x86_64"
+				export LDFLAGS="-arch i386 -arch x86_64"
+				break ;;
+		[5]* )	archi=$(sysctl -n hw.machine)
+				export CFLAGS="-arch $archi"
+				export CCFLAGS="-arch $archi"
+				export CXXFLAGS="-arch $archi"
+				export LDFLAGS="-arch $archi"
 				break ;;
 		[Qq]* ) echo "OK. Bye!"
 				exit ;;
