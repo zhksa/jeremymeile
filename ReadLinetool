@@ -147,9 +147,9 @@ echo
 		fi
 		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk'
 		then
-			echo -e ' - Use MacOSX10.9.sdk, Universal [3]'
+			echo -e ' - Use MacOSX10.9.sdk, Universal [5]'
 		fi
-		echo -e ' - Default ('$osx') [4]'
+		echo -e ' - Default ('$osx') [6]'
 		echo -ne $COL_GREEN'To continue chose and press Enter. '$COL_RESET
 else
 	echo -e 'Install and initialize XCode first!'
