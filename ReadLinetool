@@ -135,21 +135,21 @@ echo
 	echo -e $COL_GREEN'Building GNU Readline with one of the following parameters:'$COL_RESET
 		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk'
 		then
-			echo -e ' - Use MacOSX10.6.sdk, Universal [1]'
+			echo -e ' - Use MacOSX10.6.sdk, Universal [6]'
 		fi
 		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk'
 		then
-			echo -e ' - Use MacOSX10.7.sdk, Universal [2]'
+			echo -e ' - Use MacOSX10.7.sdk, Universal [7]'
 		fi
 		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk'
 		then
-			echo -e ' - Use MacOSX10.8.sdk, Universal [3]'
+			echo -e ' - Use MacOSX10.8.sdk, Universal [8]'
 		fi
 		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk'
 		then
-			echo -e ' - Use MacOSX10.9.sdk, Universal [5]'
+			echo -e ' - Use MacOSX10.9.sdk, Universal [9]'
 		fi
-		echo -e ' - Default ('$osx') [6]'
+		echo -e ' - Default ('$osx'), Universal [0]'
 		echo -ne $COL_GREEN'To continue chose and press Enter. '$COL_RESET
 else
 	echo -e 'Install and initialize XCode first!'
@@ -159,7 +159,7 @@ fi
 	while true; do
 		read -p '' yn
 		case $yn in
-		[1]* )	export MACOSX_DEPLOYMENT_TARGET=10.6
+		[6]* )	export MACOSX_DEPLOYMENT_TARGET=10.6
 				export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
 				export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
 				export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
@@ -168,7 +168,7 @@ fi
 				export CXXFLAGS="-mmacosx-version-min=10.6 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk -arch i386 -arch x86_64"
 				export LDFLAGS="-arch i386 -arch x86_64"
 				break ;;
-		[2]* )	export MACOSX_DEPLOYMENT_TARGET=10.7
+		[7]* )	export MACOSX_DEPLOYMENT_TARGET=10.7
 				export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
 				export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
 				export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
@@ -177,7 +177,7 @@ fi
 				export CXXFLAGS="-mmacosx-version-min=10.7 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64"
 				export LDFLAGS="-arch i386 -arch x86_64"
 				break ;;
-		[3]* )	export MACOSX_DEPLOYMENT_TARGET=10.8
+		[8]* )	export MACOSX_DEPLOYMENT_TARGET=10.8
 				export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 				export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 				export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
@@ -186,7 +186,7 @@ fi
 				export CXXFLAGS="-mmacosx-version-min=10.8 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -arch i386 -arch x86_64"
 				export LDFLAGS="-arch i386 -arch x86_64"
 				break ;;
-		[4]* )	export MACOSX_DEPLOYMENT_TARGET=10.9
+		[9]* )	export MACOSX_DEPLOYMENT_TARGET=10.9
 				export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
 				export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
 				export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
@@ -195,11 +195,11 @@ fi
 				export CXXFLAGS="-mmacosx-version-min=10.9 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -arch i386 -arch x86_64"
 				export LDFLAGS="-arch i386 -arch x86_64"
 				break ;;
-		[5]* )	archi=$(sysctl -n hw.machine)
-				export CFLAGS="-arch $archi"
-				export CCFLAGS="-arch $archi"
-				export CXXFLAGS="-arch $archi"
-				export LDFLAGS="-arch $archi"
+		[0]* )	#archi=$(sysctl -n hw.machine)
+				export CFLAGS="-arch i386 -arch x86_64"
+				export CCFLAGS="-arch i386 -arch x86_64"
+				export CXXFLAGS="-arch i386 -arch x86_64"
+				export LDFLAGS="-arch i386 -arch x86_64"
 				break ;;
 		[Qq]* ) echo "OK. Bye!"
 				exit ;;
