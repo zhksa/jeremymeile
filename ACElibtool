@@ -255,7 +255,7 @@ echo
 echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Building ACE ...'
 	if
 		cd ace
-		make -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/Acetool_errorMSG
+		make -f GNUmakefile.ACE -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/Acetool_errorMSG
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 		
