@@ -41,6 +41,6 @@ tar -jxvf gcc-4.7.3.tar.bz2
 cd gcc-4.7.3
 mkdir build
 cd build
-../configure --enable-checking=release --program-suffix=-4.7 --enable-languages=c,c++,fortran --prefix=$INSTALL_PATH --with-gmp=$INSTALL_PATH --with-mpfr=$INSTALL_PATH --with-mpc=$INSTALL_PATH
+../configure --enable-checking=release --program-suffix=-4.7 --enable-languages=clang --prefix=$INSTALL_PATH --with-gmp=$INSTALL_PATH --with-mpfr=$INSTALL_PATH --with-mpc=$INSTALL_PATH
 make -j $(sysctl -n hw.ncpu)
 make install
