@@ -18,8 +18,12 @@ do
 	read -p '' prefix
 		if sudo test -d $prefix; then
 			prefix=$prefix'/ace'
-			echo -e 'Installing ACE in: '$prefix
-			break
+			if [ `(echo $prefix)` = "/ace" ]; then
+				continue
+			else
+				echo -e 'Installing ACE in: '$prefix
+				break
+			fi
 		else
 			echo -e 'Path does not exists'
 			continue
@@ -33,6 +37,15 @@ echo -e '|                                           |'
 echo -e '| ACE lib builder   '$COL_BLUE'[ACEtool]'$COL_RESET'               |'
 echo -e '#############################################'
 echo
+echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Looking for headers ...'
+if [[ -d /usr/include ]]
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' Not found, running "xcode-select --install"'$COL_RESET
+	xcode-select --install
+	exit 1
+fi
 if
 	sudo -v
 then
@@ -43,16 +56,16 @@ fi
 cd /usr/local
 echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Checking source ...'
 if
-	test -f ~/Downloads/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
+	test -f ~/Downloads/ACE-6.2.2.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 then
-	if [ `echo $(md5 -q ~/Downloads/ACE-6.2.1.tar.gz)` != "119a8b1310c6dd817a674a0c2f9679e8" ]
+	if [ `echo $(md5 -q ~/Downloads/ACE-6.2.2.tar.gz)` != "2613f0795ae25feeb1182a5b2c92bd2e" ]
 	then
 		echo -e $COL_RED' Not found'$COL_RESET
 		echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Getting source ...'
 		cd ~/Downloads
-		sudo rm -d -f -r ACE-6.2.1.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
+		sudo rm -d -f -r ACE-6.2.2.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 		if
-			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
+			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.2.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
 		else
@@ -67,9 +80,9 @@ else
 	echo -e $COL_RED' Not found'$COL_RESET
 	echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Getting source ...'
 	cd ~/Downloads
-	rm -d -f -r ACE-6.2.1.tar.gz
+	rm -d -f -r ACE-6.2.2.tar.gz
 		if
-			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.1.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
+			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.2.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
 		else
@@ -83,7 +96,7 @@ echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Preparing source ...'
 if
 	cd ~/Downloads
 	sudo rm -d -f -r ~/Downloads/ACE_wrappers > /dev/null 2>/tmp/Acetool_errorMSG
-	gzcat ~/Downloads/ACE-6.2.1.tar.gz | tar -xpf -
+	gzcat ~/Downloads/ACE-6.2.2.tar.gz | tar -xpf -
 	cd ~/Downloads/ACE_wrappers
 	echo 'export ACE_ROOT=$(pwd)' > bash_profile
 	echo 'export ACE_ROOT=$ACE_ROOT' >> bash_profile
@@ -125,17 +138,21 @@ echo
 	echo -e $COL_GREEN'Building ACE libs with one of the following parameters:'$COL_RESET
 		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk'
 		then
-			echo -e ' - Use MacOSX10.6.sdk, Universal [1]'
+			echo -e ' - Use MacOSX10.6.sdk, Universal [6]'
 		fi
 		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk'
 		then
-			echo -e ' - Use MacOSX10.7.sdk, Universal [2]'
+			echo -e ' - Use MacOSX10.7.sdk, Universal [7]'
 		fi
 		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk'
 		then
-			echo -e ' - Use MacOSX10.8.sdk, Universal [3]'
+			echo -e ' - Use MacOSX10.8.sdk, Universal [8]'
 		fi
-		echo -e ' - Default ('$osx') [4]'
+		if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk'
+		then
+			echo -e ' - Use MacOSX10.9.sdk, Universal [9]'
+		fi
+		echo -e ' - Default ('$osx'), Universal [0]'
 		echo -ne $COL_GREEN'To continue chose and press Enter. '$COL_RESET
 else
 	echo -e 'Install and initialize XCode first!'
@@ -145,7 +162,7 @@ fi
 	while true; do
 		read -p '' yn
 		case $yn in
-		[1]* )	export MACOSX_DEPLOYMENT_TARGET=10.6
+		[6]* )	export MACOSX_DEPLOYMENT_TARGET=10.6
 			export DEPLOYMENT_TARGET=10.6
 			export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
 			export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
@@ -162,7 +179,7 @@ fi
 			echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_snowleopard.GNU' >> ./include/makeinclude/platform_macros.GNU
 			echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
 			break ;;
-		[2]* ) 
+		[7]* ) 
 			export MACOSX_DEPLOYMENT_TARGET=10.7
 			export DEPLOYMENT_TARGET=10.7
 			export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
@@ -180,7 +197,7 @@ fi
 			echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_lion.GNU' >> ./include/makeinclude/platform_macros.GNU
 			echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
 			break ;;
-		[3]* ) 
+		[8]* ) 
 			export MACOSX_DEPLOYMENT_TARGET=10.8
 			export DEPLOYMENT_TARGET=10.8
 			export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
@@ -198,7 +215,29 @@ fi
 			echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_mountainlion.GNU' >> ./include/makeinclude/platform_macros.GNU
 			echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
 			break ;;
-		[4]* ) 
+		[9]* ) 
+			export MACOSX_DEPLOYMENT_TARGET=10.9
+			export DEPLOYMENT_TARGET=10.9
+			export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+			export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+			export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+			export CFLAGS="-mmacosx-version-min=10.9 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -arch i386 -arch x86_64"
+			export CCFLAGS="-arch i386 -arch x86_64"
+			export CXXFLAGS="-mmacosx-version-min=10.9 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -arch i386 -arch x86_64"
+			export LDFLAGS="-arch i386 -arch x86_64"
+			echo '#include "ace/config-macosx-mavericks.h"' > ./ace/config.h
+			echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
+			echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
+			echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_mavericks.GNU' >> ./include/makeinclude/platform_macros.GNU
+			echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
+			break ;;
+		[0]* )
+			export CFLAGS="-arch i386 -arch x86_64"
+			export CCFLAGS="-arch i386 -arch x86_64"
+			export CXXFLAGS="-arch i386 -arch x86_64"
+			export LDFLAGS="-arch i386 -arch x86_64"
 			echo '#include "ace/config-macosx-'$osx'.h"' > ./ace/config.h
 			echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
 			echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
