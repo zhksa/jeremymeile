@@ -82,9 +82,9 @@ echo $userPass
 Remove_dubs(){
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Deleting duplicated sql Files ...'
 IFS=$'\n'
-for f in $(/usr/bin/find /trinityserver/sql -type f -exec /usr/bin/cksum {} \; | /usr/bin/sort); do
+for f in $(sudo /usr/bin/find /trinityserver/sql -type f -exec /usr/bin/cksum {} \; | /usr/bin/sort); do
     sum=${f%% *}
-    [[ $prev == $sum ]] && /bin/rm "$(/usr/bin/cut -d' ' -f3- <<< "$f")"
+    [[ $prev == $sum ]] && sudo /bin/rm "$(sudo /usr/bin/cut -d' ' -f3- <<< "$f")"
     prev=$sum
 done
 }
@@ -345,18 +345,19 @@ MySQL_restart(){
 Get_TDB(){
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Looking for TrinityDB ...'
 sleep 2
-tdbfile=`/usr/bin/find -s /trinityserver/sql | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/TDB_full/p' | /usr/bin/awk 'END{print}'`
+tdbfile=`sudo /usr/bin/find -s /trinityserver/sql | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/TDB_full/p' | /usr/bin/awk 'END{print}'`
 if [ "$tdbfile" = "" ]
 then
 	echo -e $COL_RED' Not found'$COL_RESET
 	echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Downloading latest TrinityDB ...'
 		if
-			curl -s http://www.trinitycore.org/f/files/getdownload/546-tdb-full-updates/ > /trinityserver/sql/base/tdb.7z 2>/tmp/TDBtool_errorMSG
+			curl -s http://www.trinitycore.org/f/files/getdownload/546-tdb-full-updates/ > /tmp/tdb.7z 2>/tmp/TDBtool_errorMSG
+			sudo cp /tmp/tdb.7z /trinityserver/sql/base/tdb.7z 2>/tmp/TDBtool_errorMSG
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
 				echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Extracting TrinityDB ...'
 				if
-					cd /trinityserver/sql/base; 7z x -y /trinityserver/sql/base/tdb.7z > /dev/null 2>/tmp/TDBtool_errorMSG
+					cd /trinityserver/sql/base; sudo 7z x -y /trinityserver/sql/base/tdb.7z > /dev/null 2>/tmp/TDBtool_errorMSG
 				then
 					echo -e $COL_GREEN' OK'$COL_RESET
 					Get_TDB
@@ -384,9 +385,9 @@ world_update(){
 						return 1
 					fi
 			then
-						file=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
+						file=$(sudo /usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
 								if [ "$curvar" = "0" ]; then
-									maxvar=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g' 2>/tmp/TDBtool_errorMSG)
+									maxvar=$(sudo /usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g' 2>/tmp/TDBtool_errorMSG)
 								fi
 										if [ "$file" = "" ]; then
 											if [ "$first" = "0" ]; then
@@ -399,7 +400,7 @@ world_update(){
 												first='1'
 											fi
 											echo -ne '       --> '
-											echo -ne $COL_MAGENTA $(/usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/head -1)$COL_RESET
+											echo -ne $COL_MAGENTA $(sudo /usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/head -1)$COL_RESET
 											curvar=$[curvar+1]
 											echo -ne ' ['$curvar'/'$maxvar']'
 											echo -ne ' ...'
@@ -440,9 +441,9 @@ auth_update(){
 						return 1
 					fi
 			then
-						file=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
+						file=$(sudo /usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
 								if [ "$curvar" = "0" ]; then
-									maxvar=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g' 2>/tmp/TDBtool_errorMSG)
+									maxvar=$(sudo /usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g' 2>/tmp/TDBtool_errorMSG)
 								fi
 								if [ "$curvar" = "500" ]; then
 									MySQL_restart
@@ -458,7 +459,7 @@ auth_update(){
 												first='1'
 											fi
 											echo -ne '       --> '
-											echo -ne $COL_MAGENTA $(/usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/head -1)$COL_RESET
+											echo -ne $COL_MAGENTA $(sudo /usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/head -1)$COL_RESET
 											curvar=$[curvar+1]
 											echo -ne ' ['$curvar'/'$maxvar']'
 											echo -ne ' ...'
@@ -499,9 +500,9 @@ characters_update(){
 						return 1
 					fi
 			then
-						file=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
+						file=$(sudo /usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
 								if [ "$curvar" = "0" ]; then
-									maxvar=$(/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g' 2>/tmp/TDBtool_errorMSG)
+									maxvar=$(sudo/usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g' 2>/tmp/TDBtool_errorMSG)
 								fi
 								if [ "$curvar" = "500" ]; then
 									MySQL_restart
@@ -517,7 +518,7 @@ characters_update(){
 												first='1'
 											fi
 											echo -ne '       --> '
-											echo -ne $COL_MAGENTA $(/usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/head -1)$COL_RESET
+											echo -ne $COL_MAGENTA $(sudo /usr/bin/find -d /trinityserver/sql -name $file | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/head -1)$COL_RESET
 											curvar=$[curvar+1]
 											echo -ne ' ['$curvar'/'$maxvar']'
 											echo -ne ' ...'
