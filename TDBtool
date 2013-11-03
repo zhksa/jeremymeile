@@ -357,7 +357,9 @@ then
 			echo -e $COL_GREEN' OK'$COL_RESET
 				echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Extracting TrinityDB ...'
 				if
-					cd /trinityserver/sql/base; sudo 7z x -y /trinityserver/sql/base/tdb.7z > /dev/null 2>/tmp/TDBtool_errorMSG
+					sudo chown -R $USER /trinityserver/sql/base
+					sudo chmod -R u+rwx /trinityserver/sql/base
+					cd /trinityserver/sql/base; 7z x -y /trinityserver/sql/base/tdb.7z > /dev/null 2>/tmp/TDBtool_errorMSG
 				then
 					echo -e $COL_GREEN' OK'$COL_RESET
 					Get_TDB
