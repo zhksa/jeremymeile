@@ -10,8 +10,9 @@ COL_MAGENTA=$ESC_SEQ"35;01m"
 COL_CYAN=$ESC_SEQ"36;01m"
 COL_GRAY=$ESC_SEQ"30;01m"
 COL_WHITE=$ESC_SEQ"37;01m"
+ACE_VER='6.2.2'
 get_path(){
-echo -e 'Welcome to '$COL_BLUE'[ACEtool] '$COL_RESET' ...'
+echo -e 'Welcome to '$COL_BLUE'[ACEtool] '$COL_RESET': currently supported ACE version ('${ACE_VER}')...'
 while true
 do
 	echo -ne $COL_GREEN'Enter install path: '$COL_RESET
@@ -56,16 +57,16 @@ fi
 cd /usr/local
 echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Checking source ...'
 if
-	test -f ~/Downloads/ACE-6.2.2.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
+	test -f ~/Downloads/ACE-${ACE_VER}.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 then
-	if [ `echo $(md5 -q ~/Downloads/ACE-6.2.2.tar.gz)` != "2613f0795ae25feeb1182a5b2c92bd2e" ]
+	if [ `echo $(md5 -q ~/Downloads/ACE-${ACE_VER}.tar.gz)` != "2613f0795ae25feeb1182a5b2c92bd2e" ]
 	then
 		echo -e $COL_RED' Not found'$COL_RESET
 		echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Getting source ...'
 		cd ~/Downloads
-		sudo rm -d -f -r ACE-6.2.2.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
+		sudo rm -d -f -r ACE-${ACE_VER}.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 		if
-			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.2.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
+			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-${ACE_VER}.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
 		else
@@ -80,9 +81,9 @@ else
 	echo -e $COL_RED' Not found'$COL_RESET
 	echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Getting source ...'
 	cd ~/Downloads
-	rm -d -f -r ACE-6.2.2.tar.gz
+	rm -d -f -r ACE-${ACE_VER}.tar.gz
 		if
-			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-6.2.2.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
+			curl -O -s http://download.dre.vanderbilt.edu/previous_versions/ACE-${ACE_VER}.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
 		else
@@ -96,7 +97,7 @@ echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Preparing source ...'
 if
 	cd ~/Downloads
 	sudo rm -d -f -r ~/Downloads/ACE_wrappers > /dev/null 2>/tmp/Acetool_errorMSG
-	gzcat ~/Downloads/ACE-6.2.2.tar.gz | tar -xpf -
+	gzcat ~/Downloads/ACE-${ACE_VER}.tar.gz | tar -xpf -
 	cd ~/Downloads/ACE_wrappers
 	echo 'export ACE_ROOT=$(pwd)' > bash_profile
 	echo 'export ACE_ROOT=$ACE_ROOT' >> bash_profile
