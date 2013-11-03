@@ -255,8 +255,8 @@ echo
 echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Building ACE ...'
 	if
 		cd ace
-		patch -f -p0 < <(curl https://raw.github.com/jeremymeile/jeremymeile/master/ace_ACE.patch)
-		make -f GNUmakefile.ACE -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/Acetool_errorMSG
+		patch -s -f -p0 < <(curl https://raw.github.com/jeremymeile/jeremymeile/master/ace_ACE.patch) 2>/tmp/Acetool_errorMSG
+		make -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/Acetool_errorMSG | time
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 		
