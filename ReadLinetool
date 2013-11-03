@@ -12,7 +12,7 @@ COL_GRAY=$ESC_SEQ"30;01m"
 COL_WHITE=$ESC_SEQ"37;01m"
 READLINE_VER='6.2'
 get_path(){
-echo -e 'Welcome to '$COL_BLUE'[Readlinetool] '$COL_RESET'currently supported version ('${ACE_VER}') ...'
+echo -e 'Welcome to '$COL_BLUE'[Readlinetool] '$COL_RESET'currently supported version ('${READLINE_VER}') ...'
 while true
 do
 	echo -ne $COL_GREEN'Enter install path: '$COL_RESET
