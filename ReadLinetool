@@ -10,8 +10,9 @@ COL_MAGENTA=$ESC_SEQ"35;01m"
 COL_CYAN=$ESC_SEQ"36;01m"
 COL_GRAY=$ESC_SEQ"30;01m"
 COL_WHITE=$ESC_SEQ"37;01m"
+READLINE_VER='6.2'
 get_path(){
-echo -e 'Welcome to '$COL_BLUE'[Readlinetool] '$COL_RESET' ...'
+echo -e 'Welcome to '$COL_BLUE'[Readlinetool] '$COL_RESET'currently supported version ('${ACE_VER}') ...'
 while true
 do
 	echo -ne $COL_GREEN'Enter install path: '$COL_RESET
@@ -56,16 +57,16 @@ fi
 cd /usr/local
 echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Checking source ...'
 if
-	test -f ~/Downloads/readline-6.2.tar.gz > /dev/null 2>/tmp/Readlinetool_errorMSG
+	test -f ~/Downloads/readline-${READLINE_VER}.tar.gz > /dev/null 2>/tmp/Readlinetool_errorMSG
 then
-	if [ `echo $(md5 -q ~/Downloads/readline-6.2.tar.gz)` != "67948acb2ca081f23359d0256e9a271c" ]
+	if [ `echo $(md5 -q ~/Downloads/readline-${READLINE_VER}.tar.gz)` != "67948acb2ca081f23359d0256e9a271c" ]
 	then
 		echo -e $COL_RED' Not found'$COL_RESET
 		echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Getting source ...'
 		cd ~/Downloads
-		sudo rm -d -f -r readline-6.2.tar.gz > /dev/null 2>/tmp/Readlinetool_errorMSG
+		sudo rm -d -f -r readline-${READLINE_VER}.tar.gz > /dev/null 2>/tmp/Readlinetool_errorMSG
 		if
-			curl -O -s ftp://ftp.cwru.edu/pub/bash/readline-6.2.tar.gz > /dev/null 2>/tmp/Readlinetool_errorMSG
+			curl -O -s ftp://ftp.cwru.edu/pub/bash/readline-${READLINE_VER}.tar.gz > /dev/null 2>/tmp/Readlinetool_errorMSG
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
 		else
@@ -80,9 +81,9 @@ else
 	echo -e $COL_RED' Not found'$COL_RESET
 	echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Getting source ...'
 	cd ~/Downloads
-	rm -d -f -r readline-6.2.tar.gz
+	rm -d -f -r readline-${READLINE_VER}.tar.gz
 		if
-			curl -O -s ftp://ftp.cwru.edu/pub/bash/readline-6.2.tar.gz > /dev/null 2>/tmp/Readlinetool_errorMSG
+			curl -O -s ftp://ftp.cwru.edu/pub/bash/readline-${READLINE_VER}.tar.gz > /dev/null 2>/tmp/Readlinetool_errorMSG
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
 		else
@@ -95,9 +96,9 @@ get_path
 echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Preparing source ...'
 if
 	cd ~/Downloads
-	sudo rm -d -f -r ~/Downloads/readline-6.2 > /dev/null 2>/tmp/Readlinetool_errorMSG
-	gzcat ~/Downloads/readline-6.2.tar.gz | tar -xpf -
-	cd readline-6.2
+	sudo rm -d -f -r ~/Downloads/readline-${READLINE_VER} > /dev/null 2>/tmp/Readlinetool_errorMSG
+	gzcat ~/Downloads/readline-${READLINE_VER}.tar.gz | tar -xpf -
+	cd readline-${READLINE_VER}
 	mkdir build
 	cd build
 then
@@ -210,11 +211,14 @@ fi
 echo
 echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Configurating Readline ...'
 	if
-		../configure --prefix=$prefix --disable-static --enable-shared > /dev/null 2>/tmp/Readlinetool_errorMSG
+		../configure --prefix=$prefix --enable-multibyte --disable-static --enable-shared > /dev/null 2>/tmp/Readlinetool_errorMSG
+		if [ $(sw_vers -productVersion | cut -c 1-4) != "10.6" ]
+		then
 		cd shlib
 		sed -e 's/-dynamic/-dynamiclib/' Makefile > Makefile.good
 		mv Makefile.good Makefile
 		cd ..
+		fi
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 		echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Building Readline ...'

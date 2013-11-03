@@ -12,7 +12,7 @@ COL_GRAY=$ESC_SEQ"30;01m"
 COL_WHITE=$ESC_SEQ"37;01m"
 ACE_VER='6.2.2'
 get_path(){
-echo -e 'Welcome to '$COL_BLUE'[ACEtool] '$COL_RESET': currently supported ACE version ('${ACE_VER}')...'
+echo -e 'Welcome to '$COL_BLUE'[ACEtool] '$COL_RESET'currently supported version ('${ACE_VER}') ...'
 while true
 do
 	echo -ne $COL_GREEN'Enter install path: '$COL_RESET
