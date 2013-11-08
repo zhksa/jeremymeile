@@ -45,13 +45,13 @@ show_error(){
 Main_menu(){
 if [[ -d /trinityserver/mysql/data ]]
 then
-echo -e 'Welcome to '$COL_BLUE'[TDBtool] '$COL_RESET' ...'
-echo -e '	'$COL_GREEN'[Create a new Database]'$COL_RESET' To remove the existing database and create a new one, press key '$COL_BLUE'[n/N]'$COL_RESET
-echo -e '	'$COL_MAGENTA'[Update the database]'$COL_RESET' To check the database and apply all updates, press key '$COL_BLUE'[u/U]'$COL_RESET
-echo -e '	'$COL_BLUE'[Backup the database]'$COL_RESET' To create a backup from the full database, press key '$COL_BLUE'[b/B]'$COL_RESET
-echo -e '	'$COL_YELLOW'[Internal IP]'$COL_RESET' To set realmlist to your internal ip address, press key '$COL_BLUE'[i/I]'$COL_RESET
-echo -e '	'$COL_YELLOW'[External IP]'$COL_RESET' To set realmlist to your external ip address, press key '$COL_BLUE'[e/E]'$COL_RESET
-echo -e '	'$COL_RED'[Exit the Script]'$COL_RESET' To exit the script, press key '$COL_BLUE'[q/Q]'$COL_RESET
+echo -e '	Welcome to '$COL_BLUE'[TDBtool] '$COL_RESET' ...'
+echo -e '	 '$COL_GREEN'[Create a new Database]'$COL_RESET' To remove the existing database and create a new one, press key '$COL_BLUE'[n/N]'$COL_RESET
+echo -e '	 '$COL_MAGENTA'[Update the database]'$COL_RESET' To check the database and apply all updates, press key '$COL_BLUE'[u/U]'$COL_RESET
+echo -e '	 '$COL_BLUE'[Backup the database]'$COL_RESET' To create a backup from the full database, press key '$COL_BLUE'[b/B]'$COL_RESET
+echo -e '	 '$COL_YELLOW'[Internal IP]'$COL_RESET' To set realmlist to your internal ip address, press key '$COL_BLUE'[i/I]'$COL_RESET
+echo -e '	 '$COL_YELLOW'[External IP]'$COL_RESET' To set realmlist to your external ip address, press key '$COL_BLUE'[e/E]'$COL_RESET
+echo -e '	 '$COL_RED'[Exit the Script]'$COL_RESET' To exit the script, press key '$COL_BLUE'[q/Q]'$COL_RESET
 	while true; do
 		read -p 'To continue, make a choice and press enter: ' yn
 		case $yn in
