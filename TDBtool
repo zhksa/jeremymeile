@@ -12,11 +12,11 @@ COL_GRAY=$ESC_SEQ"30;01m"
 COL_WHITE=$ESC_SEQ"37;01m"
 
 echo
-echo -e '#############################################'
-echo -e '| JEREMYMEILE.CH                            |'
-echo -e '|                                           |'
-echo -e '| TRINITYCORE DATABASE TOOL   '$COL_BLUE'[TDBtool]'$COL_RESET'     |'
-echo -e '#############################################'
+echo -e '	[---------------------------------------------]'
+echo -e '	[| JEREMYMEILE.CH                            |]'
+echo -e '	[|                                           |]'
+echo -e '	[| TRINITYCORE DATABASE TOOL   '$COL_BLUE'[TDBtool]'$COL_RESET'     |]'
+echo -e '	[---------------------------------------------]'
 echo
 if
 	sudo -v
@@ -35,7 +35,13 @@ else
 	xcode-select --install
 	exit 1
 fi
-
+show_error(){
+	echo -e $COL_RED' failed'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+	rm -d -f -r /tmp/TDBtool_errorMSG
+	return 1
+	echo
+}
 Main_menu(){
 if [[ -d /trinityserver/mysql/data ]]
 then
@@ -172,17 +178,13 @@ if [[ -d /trinityserver/mysql/data ]]; then
 						return 1
 					fi
 			else
-				echo -e $COL_RED' Not valid'$COL_RESET
-				echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-				return 1
+				show_error
 			fi
 		else
 			return 1
 		fi
 	else
-		echo -e $COL_RED' Not valid'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		return 1
+		show_error
 	fi
 else
 	echo -e $COL_RED' Not found'$COL_RESET
@@ -203,9 +205,7 @@ then
 		Create_MySQL_user
 	fi
 else
-	echo -e $COL_RED' error'$COL_RESET
-	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-	exit 1
+	show_error
 fi
 }
 Create_MySQL_user(){
@@ -225,14 +225,10 @@ then
 		echo -e $COL_GREEN' OK'$COL_RESET
 		return 0
 	else
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		exit 1
+		show_error
 	fi						
 else
-	echo -e $COL_RED' error'$COL_RESET
-	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-	exit 1
+	show_error
 fi
 }
 Check_MySQL_group(){
@@ -249,9 +245,7 @@ then
 		Create_MySQL_group
 	fi
 else
-	echo -e $COL_RED' error'$COL_RESET
-	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-	exit 1
+	show_error
 fi
 }
 Create_MySQL_group(){
@@ -268,14 +262,10 @@ then
 		echo -e $COL_GREEN' OK'$COL_RESET
 		return 0
 	else
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		exit 1
+		show_error
 	fi						
 else
-	echo -e $COL_RED' error'$COL_RESET
-	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-	exit 1
+	show_error
 fi
 }
 MySQL_kill(){
@@ -289,9 +279,7 @@ if [ "`ps ax | /usr/bin/grep mysqld | /usr/bin/grep -v /usr/bin/grep | /usr/bin/
 			echo -e $COL_GREEN' OK'$COL_RESET
 			return 0
 		else	
-			echo -e $COL_RED' error'$COL_RESET
-			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-			return 1
+			show_error
 		fi
 fi
 }
@@ -304,10 +292,7 @@ MySQL_stop(){
 			echo -e $COL_GREEN' OK'$COL_RESET
 			return 0
 		else	
-			echo -e $COL_RED' error'$COL_RESET
-			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-			MySQL_kill
-			return 1
+			show_error
 		fi
 	sleep 2
 }
@@ -321,9 +306,7 @@ MySQL_start(){
 			echo -e $COL_GREEN' OK'$COL_RESET
 			return 0
 		else
-			echo -e $COL_RED' error'$COL_RESET
-			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-			exit 1
+			show_error
 		fi
 	sleep 2
 }
@@ -336,9 +319,7 @@ MySQL_restart(){
 			echo -e $COL_GREEN' OK'$COL_RESET
 			return 0
 		else
-			echo -e $COL_RED' error'$COL_RESET
-			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-			exit 1
+			show_error
 		fi
 	sleep 2
 }
@@ -363,14 +344,10 @@ then
 					echo -e $COL_GREEN' OK'$COL_RESET
 					Get_TDB
 				else
-					echo -e $COL_RED' error'$COL_RESET
-					echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-					exit 1
+					show_error
 				fi
 		else
-			echo -e $COL_RED' error'$COL_RESET
-			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-			exit 1
+			show_error
 		fi
 else				
 	echo -e ' "'$COL_MAGENTA$tdbfile$COL_RESET'"'$COL_GREEN' Found'$COL_RESET
@@ -381,9 +358,7 @@ world_update(){
 			if
 				f=`sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "SELECT * FROM world ORDER BY file DESC LIMIT 1;" | /usr/bin/sed '/^$/d' | /usr/bin/awk 'END{print}' 2>/tmp/TDBtool_errorMSG`
 					if [ "$f" = "file" ]; then
-						echo -e $COL_RED' error'$COL_RESET
-						echo -e 'Update database is empty!'
-						return 1
+						show_error
 					fi
 			then
 						file=$(sudo /usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
@@ -421,25 +396,20 @@ world_update(){
 																exit 1
 															fi
 												else
-													echo -e $COL_RED' error'$COL_RESET
-													echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+													show_error
 													Backup_restore
 													exit 1
 												fi
 										fi
 			else
-				echo -e $COL_RED' error'$COL_RESET
-				echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-				return 1
+				show_error
 			fi
 }
 auth_update(){
 			if
 				f=`sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "SELECT * FROM auth ORDER BY file DESC LIMIT 1;" | /usr/bin/sed '/^$/d' | /usr/bin/awk 'END{print}' 2>/tmp/TDBtool_errorMSG`
 					if [ "$f" = "file" ]; then
-						echo -e $COL_RED' error'$COL_RESET
-						echo -e 'Update database is empty!'
-						return 1
+						show_error
 					fi
 			then
 						file=$(sudo /usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
@@ -480,25 +450,20 @@ auth_update(){
 																exit 1
 															fi
 												else
-													echo -e $COL_RED' error'$COL_RESET
-													echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+													show_error
 													Backup_restore
 													exit 1
 												fi
 										fi
 			else
-				echo -e $COL_RED' error'$COL_RESET
-				echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-				return 1
+				show_error
 			fi
 }
 characters_update(){
 			if
 				f=`sudo /trinityserver/mysql/bin/mysql -u root -p$mysql_password update_info -e "SELECT * FROM characters ORDER BY file DESC LIMIT 1;" | /usr/bin/sed '/^$/d' | /usr/bin/awk 'END{print}' 2>/tmp/TDBtool_errorMSG`
 					if [ "$f" = "file" ]; then
-						echo -e $COL_RED' error'$COL_RESET
-						echo -e 'Update database is empty!'
-						return 1
+						show_error
 					fi
 			then
 						file=$(sudo /usr/bin/find -d /trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
@@ -539,16 +504,13 @@ characters_update(){
 																exit 1
 															fi
 												else
-													echo -e $COL_RED' error'$COL_RESET
-													echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+													show_error
 													Backup_restore
 													exit 1
 												fi
 										fi
 			else
-				echo -e $COL_RED' error'$COL_RESET
-				echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-				return 1
+				show_error
 			fi
 }
 DB_update(){
@@ -601,9 +563,8 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Extracting "'$COL_MAGENTA$f$COL_RESET'"
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
+		show_error
+		Backup_restore
 		exit 1
 	fi
 MySQL_start
@@ -613,9 +574,8 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Restore Database from "'$COL_MAGENTA$f$
 		then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
+		show_error
+		Backup_restore
 		exit 1
 	fi
 MySQL_stop
@@ -627,9 +587,8 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Reload root password ...'
 		sudo rm -d -f -r $(sudo /usr/bin/find -s /trinityserver | /usr/bin/awk '{ print "source",$0 }' | /usr/bin/sed -n '/TDB_backup/p' | /usr/bin/grep -e '\.sql' | /usr/bin/awk 'END{print}') > /dev/null 2>/tmp/TDBtool_errorMSG
 		sudo rm -d -f -r /trinityserver/DB_backups/MYSQL_PASSWORD > /dev/null 2>/tmp/TDBtool_errorMSG
 	else
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
+		show_error
+		Backup_restore
 		exit 1
 	fi
 MySQL_start
@@ -639,9 +598,8 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Testing MySQL ...'
 		then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
+		show_error
+		Backup_restore
 		exit 1
 	fi
 MySQL_stop
@@ -671,9 +629,7 @@ then
 			then
 				echo -e $COL_GREEN' OK'$COL_RESET
 			else	
-				echo -e $COL_RED' error'$COL_RESET
-				echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-				MySQL_stop
+				show_error
 				rm -d -f -r /trinityserver/DB_backups/$backup_file > /dev/null 2>/tmp/TDBtool_errorMSG
 				exit 1
 			fi
@@ -685,9 +641,7 @@ then
 			then
 				echo -e $COL_GREEN' OK'$COL_RESET
 			else	
-				echo -e $COL_RED' error'$COL_RESET
-				echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-				MySQL_stop
+				show_error
 				rm -d -f -r /trinityserver/DB_backups/$backup_file > /dev/null 2>/tmp/TDBtool_errorMSG
 				exit 1
 			fi
@@ -701,10 +655,7 @@ then
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
 		else	
-			echo -e $COL_RED' error'$COL_RESET
-			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
-		exit 1
+			show_error
 		fi
 	echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Cleaning ...'
 	if
@@ -712,10 +663,7 @@ then
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
-		exit 1
+		show_error
 	fi
 	fi
 #MySQL_stop
@@ -725,13 +673,7 @@ DB_update
 exit
 fi
 else
-echo -e $COL_RED' error'$COL_RESET
-echo
-echo -e $COL_RED'MySQL Installation Directory not valid!'$COL_RESET
-echo
-MySQL_stop
-MySQL_kill
-exit 1
+show_error
 fi
 }
 realmlist_set_internal(){
@@ -748,16 +690,10 @@ then
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
-		Main_menu
+		show_error
 	fi
 else
-	echo -e $COL_RED' error'$COL_RESET
-	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-	MySQL_stop
-	Main_menu
+	show_error
 fi
 MySQL_stop
 exit
@@ -776,16 +712,10 @@ then
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
-		Main_menu
+		show_error
 	fi
 else
-	echo -e $COL_RED' error'$COL_RESET
-	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-	MySQL_stop
-	Main_menu
+	show_error
 fi
 MySQL_stop
 exit
@@ -846,7 +776,7 @@ if Remove_dubs
 then
 	echo -e $COL_GREEN' OK'$COL_RESET
 else	
-	echo -e $COL_RED' error'$COL_RESET
+show_error
 fi
 Backup_DB
 MySQL_stop
@@ -861,10 +791,7 @@ MySQL_stop
 		then
 			echo -e $COL_GREEN' OK'$COL_RESET
 		else	
-			echo -e $COL_RED' error'$COL_RESET
-			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-			MySQL_stop
-			exit 1
+			show_error
 		fi
 MySQL_stop
 MySQL_start
@@ -878,10 +805,7 @@ pw_file=MYSQL_PASSWORD
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
-		exit 1
+		show_error
 	fi
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Drop "test" database ...'
 	if
@@ -889,10 +813,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Drop "test" database ...'
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
-		exit 1
+		show_error
 	fi
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Delete Unknown user ...'
 	if
@@ -900,10 +821,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Delete Unknown user ...'
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
-		exit 1
+		show_error
 	fi
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Set new root password ...'
 	if
@@ -911,9 +829,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Set new root password ...'
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
+		show_error
 		sudo rm -d -f -r /trinityserver/mysql/data/MYSQL_PASSWORD
 		exit 1
 	fi
@@ -923,10 +839,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Flush privileges ...'
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
-		exit 1
+		show_error
 	fi
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating update_info database ...'
 	if
@@ -934,10 +847,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating update_info database ...'
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
-		exit 1
+		show_error
 	fi
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating "world" table ...'
 	if
@@ -945,10 +855,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating "world" table ...'
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
-		exit 1
+		show_error
 	fi
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating "auth" table ...'
 	if
@@ -956,10 +863,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating "auth" table ...'
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
-		exit 1
+		show_error
 	fi
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating "character" table ...'
 	if
@@ -967,10 +871,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating "character" table ...'
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		MySQL_stop
-		exit 1
+		show_error
 	fi
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'create_mysql.sql'$COL_RESET'" ...'
 
@@ -979,8 +880,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'create_mysql.sql
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 	else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+		show_error
 		Backup_restore
 		exit 1
 	fi
@@ -1005,15 +905,14 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA$tdbfile$COL_RESE
 			then
 					echo -e $COL_GREEN' OK'$COL_RESET
 			else	
-					echo -e $COL_RED' error'$COL_RESET
-						Backup_restore
+				show_error
+				Backup_restore
 				exit 1
 			fi
 	else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		Backup_restore
-		exit 1
+			show_error
+			Backup_restore
+			exit 1
 	fi
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'characters_database.sql'$COL_RESET'" ...'
 	if
@@ -1028,15 +927,14 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'characters_datab
 					then
 						echo -e $COL_GREEN' OK'$COL_RESET
 					else	
-						echo -e $COL_RED' error'$COL_RESET
-							Backup_restore
+						show_error
+						Backup_restore
 						exit 1
 					fi
 				else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		Backup_restore
-		exit 1
+			show_error
+			Backup_restore
+			exit 1
 	fi
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'auth_database.sql'$COL_RESET'" ...'
 	if
@@ -1051,15 +949,14 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'auth_database.sq
 					then
 						echo -e $COL_GREEN' OK'$COL_RESET
 					else	
-						echo -e $COL_RED' error'$COL_RESET
-							Backup_restore
+						show_error
+						Backup_restore
 						exit 1
 					fi
 				else	
-		echo -e $COL_RED' error'$COL_RESET
-		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-		Backup_restore
-		exit 1
+					show_error
+					Backup_restore
+					exit 1
 	fi
 DB_update
 if
@@ -1073,10 +970,7 @@ then
 				then
 					echo -e $COL_GREEN' OK'$COL_RESET
 				else	
-					echo -e $COL_RED' error'$COL_RESET
-					echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-					MySQL_stop
-					exit 1
+					show_error
 				fi
 		fi
 		if /bin/test -f /trinityserver/sql/Transmogrification/world_texts.sql; then
@@ -1087,10 +981,7 @@ then
 				then
 					echo -e $COL_GREEN' OK'$COL_RESET
 				else	
-					echo -e $COL_RED' error'$COL_RESET
-					echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-					MySQL_stop
-					exit 1
+					show_error
 				fi
 		fi
 		if /bin/test -f /trinityserver/sql/Transmogrification/world_NPC.sql; then
@@ -1101,10 +992,7 @@ then
 				then
 					echo -e $COL_GREEN' OK'$COL_RESET
 				else	
-					echo -e $COL_RED' error'$COL_RESET
-					echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-					MySQL_stop
-					exit 1
+					show_error
 				fi
 		fi
 fi
@@ -1115,8 +1003,7 @@ sudo /trinityserver/mysql/bin/mysqlcheck -u root -p$(sudo /bin/cat /trinityserve
 then
 echo -e $COL_GREEN' OK'$COL_RESET
 else
-echo -e $COL_RED' error'$COL_RESET
-echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+show_error
 fi
 MySQL_stop
 MySQL_kill
