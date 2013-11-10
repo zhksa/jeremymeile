@@ -32,11 +32,11 @@ do
 done
 }
 echo
-echo -e '#############################################'
+echo -e '---------------------------------------------'
 echo -e '| JEREMYMEILE.CH                            |'
 echo -e '|                                           |'
 echo -e '| ACE lib builder   '$COL_BLUE'[ACEtool]'$COL_RESET'               |'
-echo -e '#############################################'
+echo -e '---------------------------------------------'
 echo
 echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Looking for headers ...'
 if [[ -d /usr/include ]]
@@ -72,6 +72,7 @@ then
 		else
 			echo -e $COL_RED' error'$COL_RESET
 			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Acetool_errorMSG)$COL_RESET
+			rm -d -f -r /tmp/Acetool_errorMSG
 			exit 1
 		fi
 	else
@@ -89,6 +90,7 @@ else
 		else
 			echo -e $COL_RED' error'$COL_RESET
 			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Acetool_errorMSG)$COL_RESET
+			rm -d -f -r /tmp/Acetool_errorMSG
 			exit 1
 		fi
 fi
@@ -109,6 +111,7 @@ then
 else
 	echo -e $COL_RED' error'$COL_RESET
 	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Acetool_errorMSG)$COL_RESET
+	rm -d -f -r /tmp/Acetool_errorMSG
 	exit 1
 fi
 
@@ -287,13 +290,16 @@ echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Building ACE ...'
 						echo -e $COL_GREEN' OK'$COL_RESET
 					else
 						echo -e $COL_RED' error'$COL_RESET
-						echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Acetool_errorMSG)$COL_RESET					
+						echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Acetool_errorMSG)$COL_RESET
+						rm -d -f -r /tmp/Acetool_errorMSG					
 					fi
 		else
 			echo -e $COL_RED' error'$COL_RESET
 			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Acetool_errorMSG)$COL_RESET
+			rm -d -f -r /tmp/Acetool_errorMSG
 		fi
 	else
 		echo -e $COL_RED' error'$COL_RESET
 		echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Acetool_errorMSG)$COL_RESET
+		rm -d -f -r /tmp/Acetool_errorMSG
 	fi
