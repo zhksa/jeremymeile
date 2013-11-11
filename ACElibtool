@@ -178,7 +178,7 @@ fi
 			echo '#include "ace/config-macosx-snowleopard.h"' > ./ace/config.h
 			echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
 			echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
-			echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'static_libs = 1' >> ./include/makeinclude/platform_macros.GNU
 			echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
 			echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_snowleopard.GNU' >> ./include/makeinclude/platform_macros.GNU
 			echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU

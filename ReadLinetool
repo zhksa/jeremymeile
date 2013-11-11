@@ -211,7 +211,7 @@ fi
 echo
 echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Configurating Readline ...'
 	if
-		../configure --prefix=$prefix --enable-multibyte --disable-static --enable-shared > /dev/null 2>/tmp/Readlinetool_errorMSG
+		../configure --prefix=$prefix --enable-multibyte --enable-static --enable-shared > /dev/null 2>/tmp/Readlinetool_errorMSG
 		if [ $(sw_vers -productVersion | cut -c 1-4) != "10.6" ]
 		then
 		cd shlib
