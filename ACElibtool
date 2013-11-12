@@ -196,7 +196,7 @@ fi
 			echo '#include "ace/config-macosx-lion.h"' > ./ace/config.h
 			echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
 			echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
-			echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'static_libs = 1' >> ./include/makeinclude/platform_macros.GNU
 			echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
 			echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_lion.GNU' >> ./include/makeinclude/platform_macros.GNU
 			echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
@@ -214,7 +214,7 @@ fi
 			echo '#include "ace/config-macosx-mountainlion.h"' > ./ace/config.h
 			echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
 			echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
-			echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'static_libs = 1' >> ./include/makeinclude/platform_macros.GNU
 			echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
 			echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_mountainlion.GNU' >> ./include/makeinclude/platform_macros.GNU
 			echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
@@ -232,7 +232,7 @@ fi
 			echo '#include "ace/config-macosx-mavericks.h"' > ./ace/config.h
 			echo 'debug = 0' > ./include/makeinclude/platform_macros.GNU
 			echo 'shared_libs = 1' >> ./include/makeinclude/platform_macros.GNU
-			echo 'static_libs = 0' >> ./include/makeinclude/platform_macros.GNU
+			echo 'static_libs = 1' >> ./include/makeinclude/platform_macros.GNU
 			echo 'install_rpath = 0' >> ./include/makeinclude/platform_macros.GNU
 			echo 'include ${ACE_ROOT}/include/makeinclude/platform_macosx_mavericks.GNU' >> ./include/makeinclude/platform_macros.GNU
 			echo 'INSTALL_PREFIX = '$prefix >> ./include/makeinclude/platform_macros.GNU
