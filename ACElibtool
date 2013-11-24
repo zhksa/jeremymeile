@@ -32,11 +32,16 @@ do
 done
 }
 echo
-echo -e '---------------------------------------------'
-echo -e '| JEREMYMEILE.CH                            |'
-echo -e '|                                           |'
-echo -e '| ACE lib builder   '$COL_BLUE'[ACEtool]'$COL_RESET'               |'
-echo -e '---------------------------------------------'
+printf '%b\n' " ______"
+printf '%b\n' "/\\____ \\    ___   _ __    ___     ___  __   __  __"
+printf '%b\n' "\\/___/\\ \\ /' <>\`\\/\\\`'__\\/' <>\`\\ /' _ \`' _\`\\/\\ \\/\\ \\ "
+printf '%b\n' "    _\\ \\ \\/\\  ___\\ \\ \\/ /\\  ___\\/\\ \\/\\ \\/\\ \\ \\ \\_\\ \\ "
+printf '%b\n' "   /\\ \\_\\ \\ \\ \\__/\\ \\_\\ \\ \\ \\__/\\ \\_\\ \\_\\ \\_\\/\`____ \\ "
+printf '%b\n' "   \\ \\_____\\/\`____/\\ \\_\\ \\/\`____/\\ \\_\\ \\_\\ \\_\\/___/> \\ "
+printf '%b\n' "    \`/____/ \`/___/  \\/_/  \`/___/  \\/_/\\/_/\\/_/  /\\___/ "
+printf '%b\n' "  http://jeremymeile.ch             M E I L E   \\/__/ "
+echo
+echo -e  'ADAPTIVE Communication Environment installer Script '$COL_BLUE'[ACEtool]'$COL_RESET''
 echo
 echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Looking for headers ...'
 if [[ -d /usr/include ]]
