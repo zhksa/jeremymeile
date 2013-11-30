@@ -1,0 +1,12 @@
+diff -urp src/server/shared/Define.h src/server/shared/Define.h
+--- src/server/shared/Define.h	2013-05-10 14:28:26.000000000 +0200
++++ src/server/shared/Define.h	2013-05-10 18:21:34.000000000 +0200
+@@ -82,7 +82,7 @@ typedef ACE_INT64 int64;
+ typedef ACE_INT32 int32;
+ typedef ACE_INT16 int16;
+ typedef ACE_INT8 int8;
+-typedef ACE_UINT64 uint64;
++typedef uint64_t uint64;
+ typedef ACE_UINT32 uint32;
+ typedef ACE_UINT16 uint16;
+ typedef ACE_UINT8 uint8;

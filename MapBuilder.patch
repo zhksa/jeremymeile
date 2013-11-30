@@ -1,0 +1,12 @@
+diff -urp src/tools/mmaps_generator/MapBuilder.cpp src/tools/mmaps_generator/MapBuilder.cpp
+--- src/tools/mmaps_generator/MapBuilder.cpp	2013-10-27 16:44:23.000000000 +0100
++++ src/tools/mmaps_generator/MapBuilder.cpp	2013-10-27 16:48:46.000000000 +0100
+@@ -340,7 +340,7 @@ namespace MMAP
+     /**************************************************************************/
+     void MapBuilder::buildMap(uint32 mapID)
+     {
+-        printf("[Thread %u] Building map %03u:\n", uint32(ACE_Thread::self()), mapID);
++//        printf("[Thread %u] Building map %03u:\n", uint32(ACE_Thread::self()), mapID);
+ 
+         std::set<uint32>* tiles = getTileList(mapID);
+ 
