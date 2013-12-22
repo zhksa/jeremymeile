@@ -367,6 +367,12 @@ world_update(){
 					if [ "$f" = "file" ]; then
 						show_error
 					fi
+					if [ "$(/usr/bin/find -d $HOME/Applications/trinityserver/sql -name $f)" = "" ]; then
+						echo -e $COL_RED' failed'$COL_RESET
+						echo -e $COL_RED'    error '$COL_WHITE'Can not find $f. Maybe the file has been renamed in the past commits. Please check the "update_info" database with an SQL Editor and correct the file names.'$COL_RESET
+						return 1
+						echo
+					fi
 			then
 						file=$(sudo /usr/bin/find -d $HOME/Applications/trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_world_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
 								if [ "$curvar" = "0" ]; then
@@ -418,13 +424,16 @@ auth_update(){
 					if [ "$f" = "file" ]; then
 						show_error
 					fi
+					if [ "$(/usr/bin/find -d $HOME/Applications/trinityserver/sql -name $f)" = "" ]; then
+						echo -e $COL_RED' failed'$COL_RESET
+						echo -e $COL_RED'    error '$COL_WHITE'Can not find $f. Maybe the file has been renamed in the past commits. Please check the "update_info" database with an SQL Editor and correct the file names.'$COL_RESET
+						return 1
+						echo
+					fi
 			then
 						file=$(sudo /usr/bin/find -d $HOME/Applications/trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
 								if [ "$curvar" = "0" ]; then
 									maxvar=$(sudo /usr/bin/find -d $HOME/Applications/trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_auth_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g' 2>/tmp/TDBtool_errorMSG)
-								fi
-								if [ "$curvar" = "500" ]; then
-									MySQL_restart
 								fi
 										if [ "$file" = "" ]; then
 											if [ "$first" = "0" ]; then
@@ -472,13 +481,16 @@ characters_update(){
 					if [ "$f" = "file" ]; then
 						show_error
 					fi
+					if [ "$(/usr/bin/find -d $HOME/Applications/trinityserver/sql -name $f)" = "" ]; then
+						echo -e $COL_RED' failed'$COL_RESET
+						echo -e $COL_RED'    error '$COL_WHITE'Can not find $f. Maybe the file has been renamed in the past commits. Please check the "update_info" database with an SQL Editor and correct the file names.'$COL_RESET
+						return 1
+						echo
+					fi
 			then
 						file=$(sudo /usr/bin/find -d $HOME/Applications/trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/head -1 2>/tmp/TDBtool_errorMSG)
 								if [ "$curvar" = "0" ]; then
 									maxvar=$(sudo /usr/bin/find -d $HOME/Applications/trinityserver/sql | awk 'BEGIN {print "'$C'"} {print $0}' | /usr/bin/grep -e '\.sql' | /usr/bin/awk -F/ '{print $NF}' | /usr/bin/sed -n '/_characters_/p' | /usr/bin/sed -n '/201[0-9]\{1\}_[0-9][0-9]\{1\}_[0-9][0-9]/p' | /usr/bin/sort -n | /usr/bin/awk '/'$f'/{f=1;next}f' | /usr/bin/sed '/^$/d' | /usr/bin/wc -l | /usr/bin/sed 's/[^0-9]//g' 2>/tmp/TDBtool_errorMSG)
-								fi
-								if [ "$curvar" = "500" ]; then
-									MySQL_restart
 								fi
 										if [ "$file" = "" ]; then
 											if [ "$first" = "0" ]; then
