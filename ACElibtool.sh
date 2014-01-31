@@ -10,7 +10,7 @@ COL_MAGENTA=$ESC_SEQ"35;01m"
 COL_CYAN=$ESC_SEQ"36;01m"
 COL_GRAY=$ESC_SEQ"30;01m"
 COL_WHITE=$ESC_SEQ"37;01m"
-ACE_VER='6.2.2'
+ACE_VER='6.2.4'
 get_path(){
 echo -e 'Welcome to '$COL_BLUE'[ACEtool] '$COL_RESET'currently supported version ('${ACE_VER}') ...'
 while true
