@@ -10,7 +10,7 @@ COL_MAGENTA=$ESC_SEQ"35;01m"
 COL_CYAN=$ESC_SEQ"36;01m"
 COL_GRAY=$ESC_SEQ"30;01m"
 COL_WHITE=$ESC_SEQ"37;01m"
-READLINE_VER='6.2'
+READLINE_VER='6.3'
 get_path(){
 echo -e 'Welcome to '$COL_BLUE'[Readlinetool] '$COL_RESET'currently supported version ('${READLINE_VER}') ...'
 while true
@@ -217,13 +217,6 @@ echo
 echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Configurating Readline ...'
 	if
 		../configure --prefix=$prefix --enable-multibyte --enable-static --enable-shared > /dev/null 2>/tmp/Readlinetool_errorMSG
-		if [ $(sw_vers -productVersion | cut -c 1-4) != "10.6" ]
-		then
-		cd shlib
-		sed -e 's/-dynamic/-dynamiclib/' Makefile > Makefile.good
-		mv Makefile.good Makefile
-		cd ..
-		fi
 	then
 		echo -e $COL_GREEN' OK'$COL_RESET
 		echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Building Readline ...'
