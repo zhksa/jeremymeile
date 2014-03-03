@@ -10,109 +10,102 @@ COL_MAGENTA=$ESC_SEQ"35;01m"
 COL_CYAN=$ESC_SEQ"36;01m"
 COL_GRAY=$ESC_SEQ"30;01m"
 COL_WHITE=$ESC_SEQ"37;01m"
-OpenSSL_VER='1.0.1e'
-get_path(){
-echo -e 'Welcome to '$COL_BLUE'[OpenSSLtool] '$COL_RESET'currently supported version ('${OpenSSL_VER}') ...'
-while true
-do
-	echo -ne $COL_GREEN'Enter install path: '$COL_RESET
-	read -p '' prefix
-		if sudo test -d $prefix; then
-			prefix=$prefix'/openssl'
-			if [ `(echo $prefix)` = "/openssl" ]; then
-				continue
-			else
-				echo -e 'Installing OpenSSL in: '$prefix
-				break
-			fi
-		else
-			echo -e 'Path does not exists'
-			continue
-		fi
-done
-}
-echo
-echo -e '#############################################'
-echo -e '| JEREMYMEILE.CH                            |'
-echo -e '|                                           |'
-echo -e '| OpenSSL lib builder   '$COL_BLUE'[OpenSSLtool]'$COL_RESET'               |'
-echo -e '#############################################'
-echo
+OPENSSL_VERSION="1.0.1f"
+cd $HOME/Downloads
+#curl -O http://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz
+rm -d -f -r openssl_i386
+rm -d -f -r openssl_x86_64
+tar -xvzf openssl-$OPENSSL_VERSION.tar.gz
+mv openssl-$OPENSSL_VERSION openssl_i386
+tar -xvzf openssl-$OPENSSL_VERSION.tar.gz
+mv openssl-$OPENSSL_VERSION openssl_x86_64
 
+echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'Configurating source ...'
 if
-	sudo -v
-then
-	echo
-else
-	exit
-fi
-cd /usr/local
-echo -ne $COL_BLUE'[OpenSSLtool] '$COL_RESET'Checking source ...'
-if
-	test -f ~/Downloads/openssl-${OpenSSL_VER}.tar.gz > /dev/null 2>/tmp/openssltool_errorMSG
-then
-	if [ `echo $(md5 -q ~/Downloads/openssl-${OpenSSL_VER}_1+universal.darwin_10.i386-x86_64.tbz2)` != "b29188a1b33e504424232c865512cf9f" ]
-	then
-		echo -e $COL_RED' Not found'$COL_RESET
-		echo -ne $COL_BLUE'[OpenSSLtool] '$COL_RESET'Getting source ...'
-		cd ~/Downloads
-		sudo rm -d -f -r OpenSSL-${OpenSSL_VER}.tar.gz > /dev/null 2>/tmp/openssltool_errorMSG
-		if
-			curl -O -s http://lil.fr.packages.macports.org/openssl/openssl-${OpenSSL_VER}_1+universal.darwin_10.i386-x86_64.tbz2 > /dev/null 2>/tmp/openssltool_errorMSG
-		then
-			echo -e $COL_GREEN' OK'$COL_RESET
-		else
-			echo -e $COL_RED' error'$COL_RESET
-			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/openssltool_errorMSG)$COL_RESET
-			exit 1
-		fi
-	else
-		echo -e $COL_GREEN' OK'$COL_RESET
-	fi
-else
-	echo -e $COL_RED' Not found'$COL_RESET
-	echo -ne $COL_BLUE'[OpenSSLtool] '$COL_RESET'Getting source ...'
-	cd ~/Downloads
-	rm -d -f -r OpenSSL-${OpenSSL_VER}.tar.gz
-		if
-			curl -O -s http://lil.fr.packages.macports.org/openssl/openssl-${OpenSSL_VER}_1+universal.darwin_10.i386-x86_64.tbz2 > /dev/null 2>/tmp/openssltool_errorMSG
-		then
-			echo -e $COL_GREEN' OK'$COL_RESET
-		else
-			echo -e $COL_RED' error'$COL_RESET
-			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/openssltool_errorMSG)$COL_RESET
-			exit 1
-		fi
-fi
-
-get_path
-echo -ne $COL_BLUE'[OpenSSLtool] '$COL_RESET'Preparing source ...'
-if
-	cd ~/Downloads
-	sudo rm -d -f -r ~/Downloads/openssl-${OpenSSL_VER}_1+universal.darwin_10.i386-x86_64 > /dev/null 2>/tmp/Acetool_errorMSG
-	mkdir openssl-${OpenSSL_VER}_1+universal.darwin_10.i386-x86_64
-	cd openssl-${OpenSSL_VER}_1+universal.darwin_10.i386-x86_64
-	tar xfy ~/Downloads/openssl-${OpenSSL_VER}_1+universal.darwin_10.i386-x86_64.tbz2
+	cd openssl_i386
+	./Configure darwin-i386-cc -shared --prefix=/Applications/TClibs/openssl > /dev/null 2>/tmp/OpenSSLTool_errorMSG
 then
 	echo -e $COL_GREEN' OK'$COL_RESET
 else
 	echo -e $COL_RED' error'$COL_RESET
-	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/Acetool_errorMSG)$COL_RESET
-	exit 1
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/OpenSSLTool_errorMSG)$COL_RESET
+	rm -d -f -r /tmp/OpenSSLTool_errorMSG
+fi
+
+echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'Compiling source ...'
+if
+	make > /dev/null 2>/tmp/OpenSSLTool_errorMSG
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' error'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/OpenSSLTool_errorMSG)$COL_RESET
+	rm -d -f -r /tmp/OpenSSLTool_errorMSG
 fi
 	
-		echo -ne $COL_BLUE'[OpenSSLtool] '$COL_RESET'Installing OpenSSL ...'
-		if
-			sudo cp -Rp /Users/jeremymeile/Downloads/openssl-1.0.1e_1+universal.darwin_10.i386-x86_64/opt/local $prefix
-			sudo install_name_tool -id $prefix/lib/libcrypto.1.0.0.dylib $prefix/lib/libcrypto.1.0.0.dylib > /dev/null 2>/tmp/openssltool_errorMSG
-			sudo install_name_tool -id $prefix/lib/libssl.1.0.0.dylib $prefix/lib/libssl.1.0.0.dylib > /dev/null 2>/tmp/openssltool_errorMSG
-			sudo install_name_tool -change /opt/local/lib/libz.1.dylib /usr/lib/libz.1.dylib $prefix/lib/libcrypto.1.0.0.dylib > /dev/null 2>/tmp/openssltool_errorMSG
-			sudo install_name_tool -change /opt/local/lib/libz.1.dylib /usr/lib/libz.1.dylib $prefix/lib/libssl.1.0.0.dylib > /dev/null 2>/tmp/openssltool_errorMSG
-			sudo install_name_tool -change /opt/local/lib/libcrypto.1.0.0.dylib $prefix/lib/libcrypto.1.0.0.dylib $prefix/lib/libssl.1.0.0.dylib > /dev/null 2>/tmp/openssltool_errorMSG
+echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'Installing source ...'
+if
+	make MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk" install -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/OpenSSLTool_errorMSG
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' error'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/OpenSSLTool_errorMSG)$COL_RESET
+	rm -d -f -r /tmp/OpenSSLTool_errorMSG
+fi
 
-		then
-			echo -e $COL_GREEN' OK'$COL_RESET
-		else
-			echo -e $COL_RED' error'$COL_RESET
-			echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/openssltool_errorMSG)$COL_RESET
-		fi
+rm -d -f -r /Applications/TClibs/openssl_i386
+mv /Applications/TClibs/openssl /Applications/TClibs/openssl_i386
+cd ../
+
+echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'Configurating source ...'
+if
+	cd openssl_x86_64
+	./Configure darwin64-x86_64-cc -shared --prefix=/Applications/TClibs/openssl > /dev/null 2>/tmp/OpenSSLTool_errorMSG
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' error'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/OpenSSLTool_errorMSG)$COL_RESET
+	rm -d -f -r /tmp/OpenSSLTool_errorMSG
+fi
+
+echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'Compiling source ...'
+if
+	make > /dev/null 2>/tmp/OpenSSLTool_errorMSG
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' error'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/OpenSSLTool_errorMSG)$COL_RESET
+	rm -d -f -r /tmp/OpenSSLTool_errorMSG
+fi
+
+echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'Installing source ...'
+if
+	make install -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/OpenSSLTool_errorMSG
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' error'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/OpenSSLTool_errorMSG)$COL_RESET
+	rm -d -f -r /tmp/OpenSSLTool_errorMSG
+fi
+
+rm -d -f -r /Applications/TClibs/openssl_x86_64
+mv /Applications/TClibs/openssl /Applications/TClibs/openssl_x86_64
+cd ../
+mkdir /Applications/TClibs/openssl
+mkdir /Applications/TClibs/openssl/lib
+cp -r /Applications/TClibs/openssl_x86_64/include /Applications/TClibs/openssl
+
+cd /Applications/TClibs/openssl
+patch -p0 < /Users/jeremymeile/opensslconf.patch
+
+lipo -create /Applications/TClibs/openssl_i386/lib/libcrypto.a /Applications/TClibs/openssl_x86_64/lib/libcrypto.a -output /Applications/TClibs/openssl/lib/libcrypto.a
+lipo -create /Applications/TClibs/openssl_i386/lib/libssl.a /Applications/TClibs/openssl_x86_64/lib/libssl.a -output /Applications/TClibs/openssl/lib/libssl.a
+lipo -create /Applications/TClibs/openssl_i386/lib/libssl.*.dylib /Applications/TClibs/openssl_x86_64/lib/libssl.*.dylib -output /Applications/TClibs/openssl/lib/libssl.dylib
+lipo -create /Applications/TClibs/openssl_i386/lib/libcrypto.*.dylib /Applications/TClibs/openssl_x86_64/lib/libcrypto.*.dylib -output /Applications/TClibs/openssl/lib/libcrypto.dylib
+
+rm -d -f -r /Applications/TClibs/openssl_i386
+rm -d -f -r /Applications/TClibs/openssl_x86_64
