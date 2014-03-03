@@ -1,0 +1,63 @@
+--- include/openssl/opensslconf.h	2014-03-03 14:26:27.000000000 +0100
++++ include/openssl/opensslconf.h	2014-01-03 01:01:09.000000000 +0100
+@@ -120,7 +120,11 @@
+  * - Intel P6 because partial register stalls are very expensive;
+  * - elder Alpha because it lacks byte load/store instructions;
+  */
++#ifndef __LP64__
++#define RC4_INT unsigned int
++#else /* __LP64__ */
+ #define RC4_INT unsigned char
++#endif /* __LP64__ */
+ #endif
+ #if !defined(RC4_CHUNK)
+ /*
+@@ -135,20 +139,36 @@
+ /* If this is set to 'unsigned int' on a DEC Alpha, this gives about a
+  * %20 speed up (longs are 8 bytes, int's are 4). */
+ #ifndef DES_LONG
++#ifndef __LP64__
++#define DES_LONG unsigned long
++#else /* __LP64__ */
+ #define DES_LONG unsigned int
++#endif /* __LP64__ */
+ #endif
+ #endif
+ 
+ #if defined(HEADER_BN_H) && !defined(CONFIG_HEADER_BN_H)
+ #define CONFIG_HEADER_BN_H
++#ifndef __LP64__
++#define BN_LLONG
++#else /* __LP64__ */
+ #undef BN_LLONG
++#endif /* __LP64__ */
+ 
+ /* Should we define BN_DIV2W here? */
+ 
+ /* Only one for the following should be defined */
++#ifndef __LP64__
++#undef SIXTY_FOUR_BIT_LONG
++#else /* __LP64__ */
+ #define SIXTY_FOUR_BIT_LONG
++#endif /* __LP64__ */
+ #undef SIXTY_FOUR_BIT
++#ifndef __LP64__
++#define THIRTY_TWO_BIT
++#else /* __LP64__ */
+ #undef THIRTY_TWO_BIT
++#endif /* __LP64__ */
+ #endif
+ 
+ #if defined(HEADER_RC4_LOCL_H) && !defined(CONFIG_HEADER_RC4_LOCL_H)
+@@ -160,7 +180,11 @@
+ 
+ #if defined(HEADER_BF_LOCL_H) && !defined(CONFIG_HEADER_BF_LOCL_H)
+ #define CONFIG_HEADER_BF_LOCL_H
++#ifndef __LP64__
++#define BF_PTR
++#else /* __LP64__ */
+ #undef BF_PTR
++#endif /* __LP64__ */
+ #endif /* HEADER_BF_LOCL_H */
+ 
+ #if defined(HEADER_DES_LOCL_H) && !defined(CONFIG_HEADER_DES_LOCL_H)
