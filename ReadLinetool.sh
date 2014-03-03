@@ -64,7 +64,7 @@ echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Checking source ...'
 if
 	test -f ~/Downloads/readline-${READLINE_VER}.tar.gz > /dev/null 2>/tmp/Readlinetool_errorMSG
 then
-	if [ `echo $(md5 -q ~/Downloads/readline-${READLINE_VER}.tar.gz)` != "67948acb2ca081f23359d0256e9a271c" ]
+	if [ `echo $(md5 -q ~/Downloads/readline-${READLINE_VER}.tar.gz)` != "33c8fb279e981274f485fd91da77e94a" ]
 	then
 		echo -e $COL_RED' Not found'$COL_RESET
 		echo -ne $COL_BLUE'[Readlinetool] '$COL_RESET'Getting source ...'
