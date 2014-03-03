@@ -64,7 +64,7 @@ echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Checking source ...'
 if
     test -f ~/Downloads/ACE-${ACE_VER}.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 then
-    if [ `echo $(md5 -q ~/Downloads/ACE-${ACE_VER}.tar.gz)` != "2613f0795ae25feeb1182a5b2c92bd2e" ]
+    if [ `echo $(md5 -q ~/Downloads/ACE-${ACE_VER}.tar.gz)` != "f6508cd01ebd2cbd84d22012ab438855" ]
     then
         echo -e $COL_RED' Not found'$COL_RESET
         echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Getting source ...'
