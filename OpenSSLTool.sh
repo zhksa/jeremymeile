@@ -118,18 +118,6 @@ else
     exit 1
 fi
 
-echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'Configurating source ...'
-if
-	cd openssl_i386
-	./Configure darwin-i386-cc -shared --prefix=$prefix > /dev/null 2>/tmp/OpenSSLTool_errorMSG
-then
-	echo -e $COL_GREEN' OK'$COL_RESET
-else
-	echo -e $COL_RED' error'$COL_RESET
-	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/OpenSSLTool_errorMSG)$COL_RESET
-	rm -d -f -r /tmp/OpenSSLTool_errorMSG
-fi
-
 if f=$(xcode-select --print-path)
 then
 echo
@@ -160,40 +148,41 @@ fi
     while true; do
         read -p '' yn
         case $yn in
-        [6]* )  export MACOSX_DEPLOYMENT_TARGET=10.6
-            export DEPLOYMENT_TARGET=10.6
-            export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
-            export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
-            export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
-            export CFLAGS="-mmacosx-version-min=10.6 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
-            export CXXFLAGS="-mmacosx-version-min=10.6 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+        [6]* ) 
+        	MACOSX_DEPLOYMENT_TARGET="10.6"
+            DEPLOYMENT_TARGET="10.6"
+            OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+            OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+            MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+            CFLAGS="-mmacosx-version-min=10.6 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+            CXXFLAGS="-mmacosx-version-min=10.6 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
             break ;;
         [7]* ) 
-            export MACOSX_DEPLOYMENT_TARGET=10.7
-            export DEPLOYMENT_TARGET=10.7
-            export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-            export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-            export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-            export CFLAGS="-mmacosx-version-min=10.7 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
-            export CXXFLAGS="-mmacosx-version-min=10.7 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+        	MACOSX_DEPLOYMENT_TARGET="10.7"
+            DEPLOYMENT_TARGET="10.7"
+            OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+            OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+            MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+            CFLAGS="-mmacosx-version-min=10.7 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+            CXXFLAGS="-mmacosx-version-min=10.7 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
             break ;;
         [8]* ) 
-            export MACOSX_DEPLOYMENT_TARGET=10.8
-            export DEPLOYMENT_TARGET=10.8
-            export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-            export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-            export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-            export CFLAGS="-mmacosx-version-min=10.8 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-            export CXXFLAGS="-mmacosx-version-min=10.8 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+        	MACOSX_DEPLOYMENT_TARGET="10.8"
+            DEPLOYMENT_TARGET="10.8"
+            OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+            OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+            MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+            CFLAGS="-mmacosx-version-min=10.8 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+            CXXFLAGS="-mmacosx-version-min=10.8 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
             break ;;
         [9]* )
-            export MACOSX_DEPLOYMENT_TARGET=10.9
-            export DEPLOYMENT_TARGET=10.9
-            export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
-            export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
-            export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
-            export CFLAGS="-mmacosx-version-min=10.9 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
-            export CXXFLAGS="-mmacosx-version-min=10.9 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+        	MACOSX_DEPLOYMENT_TARGET="10.9"
+            DEPLOYMENT_TARGET="10.9"
+            OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+            OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+            MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+            CFLAGS="-mmacosx-version-min=10.9 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+            CXXFLAGS="-mmacosx-version-min=10.9 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
             break ;;
         [0]* )
             break ;;
@@ -203,6 +192,25 @@ fi
         esac
     done
 
+echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'Configurating source ...'
+if
+	cd openssl_i386
+	./Configure darwin-i386-cc -shared --prefix=$prefix > /dev/null 2>/tmp/OpenSSLTool_errorMSG
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' error'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/OpenSSLTool_errorMSG)$COL_RESET
+	rm -d -f -r /tmp/OpenSSLTool_errorMSG
+fi
+        	export MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET
+            export DEPLOYMENT_TARGET=$DEPLOYMENT_TARGET
+            export OSX_SDK=$OSX_SDK
+            export OSX_SYSROOT=$OSX_SYSROOT
+            export MACOSX_SYSROOT=$MACOSX_SYSROOT
+            export CFLAGS=$CFLAGS
+            export CXXFLAGS=$CXXFLAGS
+            
 echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'Building source ...'
 if
 	make > /dev/null 2>/tmp/OpenSSLTool_errorMSG
@@ -250,9 +258,29 @@ else
 	rm -d -f -r /tmp/OpenSSLTool_errorMSG
 fi
 
+        	export MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET
+            export DEPLOYMENT_TARGET=$DEPLOYMENT_TARGET
+            export OSX_SDK=$OSX_SDK
+            export OSX_SYSROOT=$OSX_SYSROOT
+            export MACOSX_SYSROOT=$MACOSX_SYSROOT
+            export CFLAGS=$CFLAGS
+            export CXXFLAGS=$CXXFLAGS
+
 echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'Building source ...'
 if
 	make > /dev/null 2>/tmp/OpenSSLTool_errorMSG
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' error'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/OpenSSLTool_errorMSG)$COL_RESET
+	rm -d -f -r /tmp/OpenSSLTool_errorMSG
+fi
+
+
+echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'make test ...'
+if
+	make test > /dev/null 2>/tmp/OpenSSLTool_errorMSG
 then
 	echo -e $COL_GREEN' OK'$COL_RESET
 else
@@ -274,11 +302,30 @@ fi
 
 cd ../
 
+echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'Apply universal Patch ...'
+if
 cd $prefix
-sudo patch -p0 < <(curl "https://raw.github.com/jeremymeile/jeremymeile/master/patches/opensslconf.patch")
+sudo patch -s -p0 < <(curl -s "https://raw.github.com/jeremymeile/jeremymeile/master/patches/opensslconf.patch")
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' error'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/OpenSSLTool_errorMSG)$COL_RESET
+	rm -d -f -r /tmp/OpenSSLTool_errorMSG
+fi
 
+echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'Creating fat binaries ...'
+if
 sudo lipo -create ~/Downloads/openssl_i386/libcrypto.a ~/Downloads/openssl_x86_64/libcrypto.a -output $prefix/lib/libcrypto.a
 sudo lipo -create ~/Downloads/openssl_i386/libssl.a ~/Downloads/openssl_x86_64/libssl.a -output $prefix/lib/libssl.a
 sudo lipo -create ~/Downloads/openssl_i386/libssl.*.dylib ~/Downloads/openssl_x86_64/libssl.*.dylib -output $prefix/lib/libssl.1.0.0.dylib
 sudo lipo -create ~/Downloads/openssl_i386/libcrypto.*.dylib ~/Downloads/openssl_x86_64/libcrypto.*.dylib -output $prefix/lib/libcrypto.1.0.0.dylib
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' error'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/OpenSSLTool_errorMSG)$COL_RESET
+	rm -d -f -r /tmp/OpenSSLTool_errorMSG
+fi
 
+md5 -q $prefix/lib/libcrypto.1.0.0.dylib
