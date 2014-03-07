@@ -130,9 +130,104 @@ else
 	rm -d -f -r /tmp/OpenSSLTool_errorMSG
 fi
 
+if f=$(xcode-select --print-path)
+then
+echo
+    echo -e $COL_GREEN'Building ACE libs with one of the following parameters:'$COL_RESET
+        if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk'
+        then
+            echo -e ' - Use MacOSX10.6.sdk, Universal [6]'
+        fi
+        if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk'
+        then
+            echo -e ' - Use MacOSX10.7.sdk, Universal [7]'
+        fi
+        if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk'
+        then
+            echo -e ' - Use MacOSX10.8.sdk, Universal [8]'
+        fi
+        if test -d $f'/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk'
+        then
+            echo -e ' - Use MacOSX10.9.sdk, Universal [9]'
+        fi
+        echo -e ' - Default ('$osx'), Universal [0]'
+        echo -ne $COL_GREEN'To continue chose and press Enter. '$COL_RESET
+else
+    echo -e 'Install and initialize XCode first!'
+    exit 1
+fi
+
+    while true; do
+        read -p '' yn
+        case $yn in
+        [6]* )  export MACOSX_DEPLOYMENT_TARGET=10.6
+            export DEPLOYMENT_TARGET=10.6
+            export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+            export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+            export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+            export CFLAGS="-mmacosx-version-min=10.6 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+            export CXXFLAGS="-mmacosx-version-min=10.6 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk"
+            break ;;
+        [7]* ) 
+            export MACOSX_DEPLOYMENT_TARGET=10.7
+            export DEPLOYMENT_TARGET=10.7
+            export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+            export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+            export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+            export CFLAGS="-mmacosx-version-min=10.7 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+            export CXXFLAGS="-mmacosx-version-min=10.7 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk"
+            break ;;
+        [8]* ) 
+            export MACOSX_DEPLOYMENT_TARGET=10.8
+            export DEPLOYMENT_TARGET=10.8
+            export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+            export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+            export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+            export CFLAGS="-mmacosx-version-min=10.8 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+            export CXXFLAGS="-mmacosx-version-min=10.8 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+            break ;;
+        [9]* )
+            export MACOSX_DEPLOYMENT_TARGET=10.9
+            export DEPLOYMENT_TARGET=10.9
+            export OSX_SDK="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+            export OSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+            export MACOSX_SYSROOT="$f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+            export CFLAGS="-mmacosx-version-min=10.9 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+            export CXXFLAGS="-mmacosx-version-min=10.9 -isysroot $f/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk"
+            break ;;
+        [0]* )
+            break ;;
+        [Qq]* ) echo "OK. Bye!"
+                exit ;;
+        * ) ;;
+        esac
+    done
+
 echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'Building source ...'
 if
 	make > /dev/null 2>/tmp/OpenSSLTool_errorMSG
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' error'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/OpenSSLTool_errorMSG)$COL_RESET
+	rm -d -f -r /tmp/OpenSSLTool_errorMSG
+fi
+
+echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'make test ...'
+if
+	make test > /dev/null 2>/tmp/OpenSSLTool_errorMSG
+then
+	echo -e $COL_GREEN' OK'$COL_RESET
+else
+	echo -e $COL_RED' error'$COL_RESET
+	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/OpenSSLTool_errorMSG)$COL_RESET
+	rm -d -f -r /tmp/OpenSSLTool_errorMSG
+fi
+
+echo -ne $COL_BLUE'[OpenSSLTool] '$COL_RESET'Installing source ...'
+if
+	sudo make install -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/OpenSSLTool_errorMSG
 then
 	echo -e $COL_GREEN' OK'$COL_RESET
 else
