@@ -10,7 +10,7 @@ COL_MAGENTA=$ESC_SEQ"35;01m"
 COL_CYAN=$ESC_SEQ"36;01m"
 COL_GRAY=$ESC_SEQ"30;01m"
 COL_WHITE=$ESC_SEQ"37;01m"
-ACE_VER='6.2.4'
+ACE_VER='6.2.5'
 get_path(){
 echo -e 'Welcome to '$COL_BLUE'[ACEtool] '$COL_RESET'currently supported version ('${ACE_VER}') ...'
 while true
@@ -64,7 +64,7 @@ echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Checking source ...'
 if
     test -f ~/Downloads/ACE-${ACE_VER}.tar.gz > /dev/null 2>/tmp/Acetool_errorMSG
 then
-    if [ `echo $(md5 -q ~/Downloads/ACE-${ACE_VER}.tar.gz)` != "f6508cd01ebd2cbd84d22012ab438855" ]
+    if [ `echo $(md5 -q ~/Downloads/ACE-${ACE_VER}.tar.gz)` != "88336527d3d90c6ec444fbe9ce2a6db9" ]
     then
         echo -e $COL_RED' Not found'$COL_RESET
         echo -ne $COL_BLUE'[ACEtool] '$COL_RESET'Getting source ...'
