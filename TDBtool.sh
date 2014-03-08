@@ -709,7 +709,6 @@ then
 #MySQL_kill
 #exit 1
 DB_update
-exit
 fi
 else
 show_error
