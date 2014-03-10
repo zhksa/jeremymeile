@@ -66,10 +66,15 @@ echo -e '    '$COL_RED'[Exit the Script]'$COL_RESET' To exit the script, press k
         case $yn in
         [Nn]* ) sudo rm -d -f -r $HOME/Applications/trinityserver/mysql/data
                 break ;;
-        [Uu]* ) break ;;
+        [Uu]* ) Check_DB
+                Backup_DB
+                Remove_dubs
+                DB_update
+                exit ;;
         [Ww]* ) Backup_DB
                 Get_TDB
                 Do_TDB
+                Remove_dubs
                 DB_update
                 exit ;;
         [Bb]* ) Check_DB
@@ -77,11 +82,11 @@ echo -e '    '$COL_RED'[Exit the Script]'$COL_RESET' To exit the script, press k
                 break ;;
         [Rr]* ) Check_DB
                 RESTORE_DB
-                break ;;
+                exit ;;
         [Ii]* ) realmlist_set_internal
-                break ;;
+                exit ;;
         [Ee]* ) realmlist_set_external
-                break ;;
+                exit ;;
         [Qq]* ) echo "OK. Bye!"
                 exit ;;
         * ) ;;
@@ -157,10 +162,10 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Initializing MySQL directory ...'
                 if
                 test -x $HOME/Applications/trinityserver/mysql/bin/mysqldump
                 then
-                	echo -e $COL_GREEN' OK'$COL_RESET
+                    echo -e $COL_GREEN' OK'$COL_RESET
                     return 0
                 else
-                	show_error
+                    show_error
                     return 1
                 fi
             else
@@ -868,6 +873,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'create_mysql.sql
 Do_TDB(){
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA$tdbfile$COL_RESET'" ...'
     if
+        $HOME/Applications/trinityserver/mysql/bin/mysql -u root -e "DELETE * FROM world" > /dev/null 2>/tmp/TDBtool_errorMSG
         sudo /usr/bin/find -d $HOME/Applications/trinityserver/sql -name $tdbfile | /usr/bin/awk '{ print "source",$0 }' | /usr/bin/awk 'END{print}' | sudo $HOME/Applications/trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat $HOME/Applications/trinityserver/mysql/data/MYSQL_PASSWORD) world 2>/tmp/TDBtool_errorMSG
     then
         echo -e $COL_GREEN' OK'$COL_RESET
