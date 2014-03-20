@@ -186,6 +186,8 @@ if [[ -d $HOME/Applications/trinityserver/mysql/data ]]; then
     then
         if
         echo -e $COL_GREEN' OK'$COL_RESET
+        sudo chown -R $USER $HOME/Applications/trinityserver/*
+        sudo chown -R mysql $HOME/Applications/trinityserver/mysql/data
         MySQL_start
         then
             echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Testing Database ...'
