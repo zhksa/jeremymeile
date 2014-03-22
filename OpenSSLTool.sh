@@ -327,5 +327,3 @@ else
 	echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/OpenSSLTool_errorMSG)$COL_RESET
 	rm -d -f -r /tmp/OpenSSLTool_errorMSG
 fi
-
-md5 -q $prefix/lib/libcrypto.1.0.0.dylib
