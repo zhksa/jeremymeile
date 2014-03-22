@@ -907,9 +907,6 @@ show_error(){
     return 1
     echo
 }
-Check_MySQL_user
-Check_MySQL_group
-Check_DB
 Main_menu(){
 if [[ -d $HOME/Applications/trinityserver/mysql/data ]]
 then
