@@ -32,68 +32,6 @@ then
 else
     exit
 fi
-
-echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Looking for headers ...'
-if [[ -d /usr/include ]]
-then
-    echo -e $COL_GREEN' OK'$COL_RESET
-else
-    echo -e $COL_RED' Not found, running "xcode-select --install"'$COL_RESET
-    xcode-select --install
-    exit 1
-fi
-show_error(){
-    echo -e $COL_RED' failed'$COL_RESET
-    echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-    rm -d -f -r /tmp/TDBtool_errorMSG
-    return 1
-    echo
-}
-Main_menu(){
-if [[ -d $HOME/Applications/trinityserver/mysql/data ]]
-then
-echo -e '   Welcome to '$COL_BLUE'[TDBtool] '$COL_RESET' ...'
-echo -e '    '$COL_GREEN'[Create a new Database]'$COL_RESET' To remove the existing database and create a new one, press key '$COL_BLUE'[n/N]'$COL_RESET
-echo -e '    '$COL_GREEN'[Create a new World Database]'$COL_RESET' To remove the existing database and create a new one, press key '$COL_BLUE'[w/W]'$COL_RESET
-echo -e '    '$COL_MAGENTA'[Update the database]'$COL_RESET' To check the database and apply all updates, press key '$COL_BLUE'[u/U]'$COL_RESET
-echo -e '    '$COL_BLUE'[Backup the database]'$COL_RESET' To create a backup from the full database, press key '$COL_BLUE'[b/B]'$COL_RESET
-echo -e '    '$COL_BLUE'[Restore the database]'$COL_RESET' To restore the full database from last backup, press key '$COL_BLUE'[b/B]'$COL_RESET
-echo -e '    '$COL_YELLOW'[Internal IP]'$COL_RESET' To set realmlist to your internal ip address, press key '$COL_BLUE'[i/I]'$COL_RESET
-echo -e '    '$COL_YELLOW'[External IP]'$COL_RESET' To set realmlist to your external ip address, press key '$COL_BLUE'[e/E]'$COL_RESET
-echo -e '    '$COL_RED'[Exit the Script]'$COL_RESET' To exit the script, press key '$COL_BLUE'[q/Q]'$COL_RESET
-    while true; do
-        read -p 'To continue, make a choice and press enter: ' yn
-        case $yn in
-        [Nn]* ) sudo rm -d -f -r $HOME/Applications/trinityserver/mysql/data
-                break ;;
-        [Uu]* ) Check_DB
-                Backup_DB
-                Remove_dubs
-                DB_update
-                exit ;;
-        [Ww]* ) Backup_DB
-                Get_TDB
-                Do_TDB
-                Remove_dubs
-                DB_update
-                exit ;;
-        [Bb]* ) Check_DB
-                Backup_DB
-                break ;;
-        [Rr]* ) Check_DB
-                RESTORE_DB
-                exit ;;
-        [Ii]* ) realmlist_set_internal
-                exit ;;
-        [Ee]* ) realmlist_set_external
-                exit ;;
-        [Qq]* ) echo "OK. Bye!"
-                exit ;;
-        * ) ;;
-        esac
-    done
-fi
-}
 MySQL_pw(){
 echo -en $COL_WHITE' Please enter a new MySQL root password: '$COL_RESET
 while true
@@ -953,7 +891,70 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'auth_database.sq
     fi
 }
 #functions_end
-
+echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Looking for headers ...'
+if [[ -d /usr/include ]]
+then
+    echo -e $COL_GREEN' OK'$COL_RESET
+else
+    echo -e $COL_RED' Not found, running "xcode-select --install"'$COL_RESET
+    xcode-select --install
+    exit 1
+fi
+show_error(){
+    echo -e $COL_RED' failed'$COL_RESET
+    echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+    rm -d -f -r /tmp/TDBtool_errorMSG
+    return 1
+    echo
+}
+Check_MySQL_user
+Check_MySQL_group
+Check_DB
+Main_menu(){
+if [[ -d $HOME/Applications/trinityserver/mysql/data ]]
+then
+echo -e '   Welcome to '$COL_BLUE'[TDBtool] '$COL_RESET' ...'
+echo -e '    '$COL_GREEN'[Create a new Database]'$COL_RESET' To remove the existing database and create a new one, press key '$COL_BLUE'[n/N]'$COL_RESET
+echo -e '    '$COL_GREEN'[Create a new World Database]'$COL_RESET' To remove the existing database and create a new one, press key '$COL_BLUE'[w/W]'$COL_RESET
+echo -e '    '$COL_MAGENTA'[Update the database]'$COL_RESET' To check the database and apply all updates, press key '$COL_BLUE'[u/U]'$COL_RESET
+echo -e '    '$COL_BLUE'[Backup the database]'$COL_RESET' To create a backup from the full database, press key '$COL_BLUE'[b/B]'$COL_RESET
+echo -e '    '$COL_BLUE'[Restore the database]'$COL_RESET' To restore the full database from last backup, press key '$COL_BLUE'[b/B]'$COL_RESET
+echo -e '    '$COL_YELLOW'[Internal IP]'$COL_RESET' To set realmlist to your internal ip address, press key '$COL_BLUE'[i/I]'$COL_RESET
+echo -e '    '$COL_YELLOW'[External IP]'$COL_RESET' To set realmlist to your external ip address, press key '$COL_BLUE'[e/E]'$COL_RESET
+echo -e '    '$COL_RED'[Exit the Script]'$COL_RESET' To exit the script, press key '$COL_BLUE'[q/Q]'$COL_RESET
+    while true; do
+        read -p 'To continue, make a choice and press enter: ' yn
+        case $yn in
+        [Nn]* ) sudo rm -d -f -r $HOME/Applications/trinityserver/mysql/data
+                break ;;
+        [Uu]* ) Check_DB
+                Backup_DB
+                Remove_dubs
+                DB_update
+                exit ;;
+        [Ww]* ) Backup_DB
+                Get_TDB
+                Do_TDB
+                Remove_dubs
+                DB_update
+                exit ;;
+        [Bb]* ) Check_DB
+                Backup_DB
+                break ;;
+        [Rr]* ) Check_DB
+                RESTORE_DB
+                exit ;;
+        [Ii]* ) realmlist_set_internal
+                exit ;;
+        [Ee]* ) realmlist_set_external
+                exit ;;
+        [Qq]* ) echo "OK. Bye!"
+                exit ;;
+        * ) ;;
+        esac
+    done
+fi
+}
 Main_menu
 MySQL_kill
 if
