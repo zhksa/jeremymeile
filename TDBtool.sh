@@ -160,7 +160,7 @@ fi
 Check_MySQL_user(){
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Initializing _mysql user ...'
 if
-    K=$(/usr/bin/dscl . -list /Users | /usr/bin/grep -e 'mysql') 2>/tmp/TDBtool_errorMSG
+    K=$(/usr/bin/dscl . -list /Users UniqueID | /usr/bin/grep -e 'mysql' | /usr/bin/awk '{print $1}') 2>/tmp/TDBtool_errorMSG
 then
     if [ "$K" = "_mysql" ]
     then
@@ -175,55 +175,22 @@ else
 fi
 }
 Create_MySQL_user(){
-echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating _mysql user ...'
+echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating _mysql user and group ...'
 if
     UserIDNUM=$(($(/usr/bin/dscl . -list /Users UniqueID | /usr/bin/awk '{print $2}' | /usr/bin/sort -ug | /usr/bin/tail -1)+1)) 2>/tmp/TDBtool_errorMSG
-    GroupIDNUM=$(($(/usr/bin/dscl . -list /Groups PrimaryGroupID | /usr/bin/awk '{print $2}' | /usr/bin/sort -ug | /usr/bin/tail -1)+1)) 2>/tmp/TDBtool_errorMSG
-then
-    if
-        sudo /usr/bin/dscl . create /Users/_mysql > /dev/null 2>/tmp/TDBtool_errorMSG
-        sudo /usr/bin/dscl . append /Users/_mysql RecordName mysql > /dev/null 2>/tmp/TDBtool_errorMSG
-        sudo /usr/bin/dscl . create /Users/_mysql RealName "MySQL User" > /dev/null 2>/tmp/TDBtool_errorMSG
-        sudo /usr/bin/dscl . create /Users/_mysql UniqueID $UserIDNUM > /dev/null 2>/tmp/TDBtool_errorMSG
-        sudo /usr/bin/dscl . create /Users/_mysql PrimaryGroupID $GroupIDNUM > /dev/null 2>/tmp/TDBtool_errorMSG
-        sudo /usr/bin/dscl . create /Users/_mysql UserShell /usr/bin/false > /dev/null 2>/tmp/TDBtool_errorMSG
-    then
-        echo -e $COL_GREEN' OK'$COL_RESET
-        return 0
-    else
-        show_error
-    fi
-else
-    show_error
-fi
-}
-Check_MySQL_group(){
-echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Initializing _mysql group ...'
-if
-    K=$(/usr/bin/dscl . -list /Groups | /usr/bin/grep -e 'mysql') 2>/tmp/TDBtool_errorMSG
-then
-    if [ "$K" = "_mysql" ]
-    then
-        echo -e $COL_GREEN' OK'$COL_RESET
-        return 0
-    else
-        echo -e $COL_RED' NO _mysql group found'$COL_RESET
-        Create_MySQL_group
-    fi
-else
-    show_error
-fi
-}
-Create_MySQL_group(){
-echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Creating _mysql group ...'
-if
     GroupIDNUM=$(($(/usr/bin/dscl . -list /Groups PrimaryGroupID | /usr/bin/awk '{print $2}' | /usr/bin/sort -ug | /usr/bin/tail -1)+1)) 2>/tmp/TDBtool_errorMSG
 then
     if
         sudo /usr/bin/dscl . create /Groups/_mysql > /dev/null 2>/tmp/TDBtool_errorMSG
         sudo /usr/bin/dscl . append /Groups/_mysql RecordName mysql > /dev/null 2>/tmp/TDBtool_errorMSG
         sudo /usr/bin/dscl . create /Groups/_mysql PrimaryGroupID $GroupIDNUM > /dev/null 2>/tmp/TDBtool_errorMSG
-        sudo /usr/bin/dscl . create /Groups/_mysql RealName "MySQL Group" > /dev/null 2>/tmp/TDBtool_errorMSG   
+        sudo /usr/bin/dscl . create /Groups/_mysql RealName "MySQL Group" > /dev/null 2>/tmp/TDBtool_errorMSG
+        sudo /usr/bin/dscl . create /Users/_mysql > /dev/null 2>/tmp/TDBtool_errorMSG
+        sudo /usr/bin/dscl . append /Users/_mysql RecordName mysql > /dev/null 2>/tmp/TDBtool_errorMSG
+        sudo /usr/bin/dscl . create /Users/_mysql RealName "MySQL User" > /dev/null 2>/tmp/TDBtool_errorMSG
+        sudo /usr/bin/dscl . create /Users/_mysql UniqueID $UserIDNUM > /dev/null 2>/tmp/TDBtool_errorMSG
+        sudo /usr/bin/dscl . create /Users/_mysql PrimaryGroupID $GroupIDNUM > /dev/null 2>/tmp/TDBtool_errorMSG
+        sudo /usr/bin/dscl . create /Users/_mysql UserShell /usr/bin/false > /dev/null 2>/tmp/TDBtool_errorMSG
     then
         echo -e $COL_GREEN' OK'$COL_RESET
         return 0
@@ -952,6 +919,8 @@ echo -e '    '$COL_RED'[Exit the Script]'$COL_RESET' To exit the script, press k
     done
 fi
 }
+Check_MySQL_user
+Check_DB
 Main_menu
 MySQL_kill
 if
@@ -1001,7 +970,6 @@ if
 fi
 MySQL_stop
 Check_MySQL_user
-Check_MySQL_group
 if Remove_dubs
 then
     echo -e $COL_GREEN' OK'$COL_RESET
