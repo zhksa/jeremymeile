@@ -1,5 +1,13 @@
 #!/bin/bash 
 INSTALL_PATH="/usr/local"
+echo
+if
+    sudo -v
+then
+    echo
+else
+    exit
+fi
 cd ~/Downloads
 rm -d -f -r gmp-5.1.3
 rm -d -f -r gmp-5.1.3.tar.bz2
@@ -15,8 +23,8 @@ export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacO
 #export CC="/gcc/bin/gcc"
 #export CXX="/gcc/bin/c++"
 ../configure --prefix=$INSTALL_PATH --enable-cxx
-make -j $(sysctl -n hw.ncpu)
-make install
+make -j $(sysctl -n hw.ncpu) > /dev/null
+sudo make install > /dev/null
 
 cd ~/Downloads
 rm -d -f -r mpfr-3.1.2
@@ -31,8 +39,8 @@ export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.plat
 export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 ../configure --prefix=$INSTALL_PATH --with-gmp=$INSTALL_PATH
-make -j $(sysctl -n hw.ncpu)
-make install
+make -j $(sysctl -n hw.ncpu) > /dev/null
+sudo make install > /dev/null
 
 cd ~/Downloads
 rm -d -f -r mpc-1.0.1
@@ -47,8 +55,8 @@ export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.plat
 export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 ../configure --prefix=$INSTALL_PATH --with-gmp=$INSTALL_PATH --with-mpfr=$INSTALL_PATH
-make -j $(sysctl -n hw.ncpu)
-make install
+make -j $(sysctl -n hw.ncpu) > /dev/null
+sudo make install > /dev/null
 
 cd ~/Downloads
 rm -d -f -r gcc-4.7.3
@@ -65,7 +73,7 @@ export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.
 export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 ../configure --enable-checking=release --program-suffix=-4.7 --enable-checking=release --prefix=$INSTALL_PATH --with-gmp=$INSTALL_PATH --with-mpfr=$INSTALL_PATH --with-mpc=$INSTALL_PATH
 make -j $(sysctl -n hw.ncpu)
-make install
+sudo make install
 ../configure --enable-checking=release --program-suffix=-4.7 --enable-languages=c,c++,fortran,clang --prefix=$INSTALL_PATH --with-gmp=$INSTALL_PATH --with-mpfr=$INSTALL_PATH --with-mpc=$INSTALL_PATH
-make -j $(sysctl -n hw.ncpu)
-make install > /dev/null
+make -j $(sysctl -n hw.ncpu) > /dev/null
+sudo make install > /dev/null
