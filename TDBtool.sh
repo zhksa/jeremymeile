@@ -10,8 +10,6 @@ COL_MAGENTA=$ESC_SEQ"35;01m"
 COL_CYAN=$ESC_SEQ"36;01m"
 COL_GRAY=$ESC_SEQ"30;01m"
 COL_WHITE=$ESC_SEQ"37;01m"
-
-
 echo
 printf '%b\n' " ______"
 printf '%b\n' "/\\____ \\    ___   _ __    ___     ___  __   __  __"
@@ -23,7 +21,6 @@ printf '%b\n' "    \`/____/ \`/___/  \\/_/  \`/___/  \\/_/\\/_/\\/_/  /\\___/ "
 printf '%b\n' "  http://jeremymeile.ch             M E I L E   \\/__/ "
 echo
 echo -e  'TRINITYCORE DATABASE TOOL '$COL_BLUE'[TDBtool]'$COL_RESET''
-
 echo
 if
     sudo -v
@@ -202,7 +199,7 @@ if [ "`ps ax | /usr/bin/grep mysqld | /usr/bin/grep -v /usr/bin/grep | /usr/bin/
         then
             echo -e $COL_GREEN' OK'$COL_RESET
             return 0
-        else    
+        else
             show_error
         fi
 fi
@@ -215,7 +212,7 @@ MySQL_stop(){
         then
             echo -e $COL_GREEN' OK'$COL_RESET
             return 0
-        else    
+        else
             show_error
         fi
     sleep 2
@@ -800,7 +797,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'characters_datab
                         sudo $HOME/Applications/trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat $HOME/Applications/trinityserver/mysql/data/MYSQL_PASSWORD) update_info -e "INSERT INTO characters VALUES ('$B');"
                     then
                         echo -e $COL_GREEN' OK'$COL_RESET
-                    else    
+                    else
                         show_error
                         RESTORE_DB
                         exit 1
@@ -829,7 +826,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'auth_database.sq
                         RESTORE_DB
                         exit 1
                     fi
-                else    
+                else
                     show_error
                     RESTORE_DB
                     exit 1
@@ -838,46 +835,46 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'auth_database.sq
 Get7Zip(){
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Downloading "'$COL_MAGENTA'7Zip (required for Backup compression)'$COL_RESET'" ...'
     if
-    	cd ~/Downloads > /dev/null 2>/tmp/TDBtool_errorMSG
-    	rm -d -f -r p7zip_9.20.1_src_all.tar.bz2 > /dev/null 2>/tmp/TDBtool_errorMSG
-		curl -O -s 'http://optimate.dl.sourceforge.net/project/p7zip/p7zip/9.20.1/p7zip_9.20.1_src_all.tar.bz2' > /dev/null 2>/tmp/TDBtool_errorMSG
+        cd ~/Downloads > /dev/null 2>/tmp/TDBtool_errorMSG
+        rm -d -f -r p7zip_9.20.1_src_all.tar.bz2 > /dev/null 2>/tmp/TDBtool_errorMSG
+        curl -O -s 'http://optimate.dl.sourceforge.net/project/p7zip/p7zip/9.20.1/p7zip_9.20.1_src_all.tar.bz2' > /dev/null 2>/tmp/TDBtool_errorMSG
     then
         echo -e $COL_GREEN' OK'$COL_RESET
         echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Extracting 7Zip ...'
             if
-				cd ~/Downloads > /dev/null 2>/tmp/TDBtool_errorMSG
-				tar -xjf p7zip_9.20.1_src_all.tar.bz2 > /dev/null 2>/tmp/TDBtool_errorMSG
+                cd ~/Downloads > /dev/null 2>/tmp/TDBtool_errorMSG
+                tar -xjf p7zip_9.20.1_src_all.tar.bz2 > /dev/null 2>/tmp/TDBtool_errorMSG
             then
                 echo -e $COL_GREEN' OK'$COL_RESET
                 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Building 7Zip ...'
-					if
-						cd ~/Downloads/p7zip_9.20.1 > /dev/null 2>/tmp/TDBtool_errorMSG
-						mv makefile.macosx_64bits makefile.machine > /dev/null 2>/tmp/TDBtool_errorMSG
-						make -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/TDBtool_errorMSG
-					then
+                    if
+                        cd ~/Downloads/p7zip_9.20.1 > /dev/null 2>/tmp/TDBtool_errorMSG
+                        mv makefile.macosx_64bits makefile.machine > /dev/null 2>/tmp/TDBtool_errorMSG
+                        make -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/TDBtool_errorMSG
+                    then
                         echo -e $COL_GREEN' OK'$COL_RESET
                         echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Installing 7Zip ...'
-                        	if
-                        		sudo make install > /dev/null 2>/tmp/TDBtool_errorMSG
-                        	then
-								echo -e $COL_GREEN' OK'$COL_RESET
-								return 0
-				            else
-                        		show_error
-                        		return 1
-                    		fi		
-				    else
+                            if
+                                sudo make install > /dev/null 2>/tmp/TDBtool_errorMSG
+                            then
+                                echo -e $COL_GREEN' OK'$COL_RESET
+                                return 0
+                            else
+                                show_error
+                                return 1
+                            fi
+                    else
                         show_error
                         return 1
-                    fi	
-			else
+                    fi  
+            else
                 show_error
                 return 1
             fi
-	else
+    else
         show_error
         return 1
-    fi	                    
+    fi
 }
 show_error(){
     echo -e $COL_RED' failed'$COL_RESET
@@ -906,7 +903,7 @@ if
     then
         echo -e $COL_GREEN' OK'$COL_RESET
     else    
-		Get7Zip
+        Get7Zip
 fi
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Looking for headers ...'
 if [[ -d /usr/include ]]
@@ -935,11 +932,11 @@ echo -e '    '$COL_RED'[Exit the Script]'$COL_RESET' To exit the script, press k
         case $yn in
         [Nn]* ) sudo rm -d -f -r $HOME/Applications/trinityserver/mysql/data
                 Do_newDB
-				Get_TDB
-				Do_TDB
-				Do_characters_database
-				Do_auth_database
-				DB_update
+                Get_TDB
+                Do_TDB
+                Do_characters_database
+                Do_auth_database
+                DB_update
                 break ;;
         [Uu]* ) Check_DB
                 Backup_DB
