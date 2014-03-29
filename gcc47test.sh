@@ -1,5 +1,5 @@
 #!/bin/bash 
-INSTALL_PATH="/Applications/gcc47"
+INSTALL_PATH="/usr/local"
 cd ~/Downloads
 rm -d -f -r gmp-5.1.3
 rm -d -f -r gmp-5.1.3.tar.bz2
@@ -14,7 +14,7 @@ export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.
 export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 #export CC="/gcc/bin/gcc"
 #export CXX="/gcc/bin/c++"
-../configure --prefix=/Applications/gcc47 --enable-cxx
+../configure --prefix=$INSTALL_PATH --enable-cxx
 make -j $(sysctl -n hw.ncpu)
 make install
 
@@ -30,7 +30,7 @@ export DEPLOYMENT_TARGET=10.8
 export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-../configure --prefix=/Applications/gcc47 --with-gmp=/Applications/gcc47
+../configure --prefix=$INSTALL_PATH --with-gmp=$INSTALL_PATH
 make -j $(sysctl -n hw.ncpu)
 make install
 
@@ -46,7 +46,7 @@ export DEPLOYMENT_TARGET=10.8
 export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-../configure --prefix=/Applications/gcc47 --with-gmp=/Applications/gcc47 --with-mpfr=/Applications/gcc47
+../configure --prefix=$INSTALL_PATH --with-gmp=$INSTALL_PATH --with-mpfr=$INSTALL_PATH
 make -j $(sysctl -n hw.ncpu)
 make install
 
@@ -59,20 +59,13 @@ cd gcc-4.7.3
 rm -d -f -r build
 mkdir build
 cd build
-<<<<<<< HEAD
 export DEPLOYMENT_TARGET=10.8
 export OSX_SDK="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 export OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
 export MACOSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
-../configure --enable-checking=release --program-suffix=-4.7 --enable-checking=release --prefix=/Applications/gcc47 --with-gmp=/Applications/gcc47 --with-mpfr=/Applications/gcc47 --with-mpc=/Applications/gcc47
+../configure --enable-checking=release --program-suffix=-4.7 --enable-checking=release --prefix=$INSTALL_PATH --with-gmp=$INSTALL_PATH --with-mpfr=$INSTALL_PATH --with-mpc=$INSTALL_PATH
 make -j $(sysctl -n hw.ncpu)
 make install
-=======
-<<<<<<< HEAD
-../configure --enable-checking=release --program-suffix=-4.7 --enable-languages=clang --prefix=$INSTALL_PATH --with-gmp=$INSTALL_PATH --with-mpfr=$INSTALL_PATH --with-mpc=$INSTALL_PATH
-=======
-../configure --enable-checking=release --program-suffix=-4.7 --enable-languages=c,c++,fortran --prefix=$INSTALL_PATH --with-gmp=$INSTALL_PATH --with-mpfr=$INSTALL_PATH --with-mpc=$INSTALL_PATH > /dev/null 2>/tmp/Acetool_errorMSG
->>>>>>> d2576c5ee6547ce587a7d8b1ef5b17f7e8076d95
+../configure --enable-checking=release --program-suffix=-4.7 --enable-languages=c,c++,fortran,clang --prefix=$INSTALL_PATH --with-gmp=$INSTALL_PATH --with-mpfr=$INSTALL_PATH --with-mpc=$INSTALL_PATH
 make -j $(sysctl -n hw.ncpu)
 make install > /dev/null
->>>>>>> 3325b973873a9d08b7943cd4797402d0f0638a6a
