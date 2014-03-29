@@ -46,15 +46,6 @@ while true
 done
 echo $userPass
 }
-Remove_dubs(){
-echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Deleting duplicated sql Files ...'
-IFS=$'\n'
-for f in $(sudo /usr/bin/find $HOME/Applications/trinityserver/sql -type f -exec /usr/bin/cksum {} \; | /usr/bin/sort); do
-    sum=${f%% *}
-    [[ $prev == $sum ]] && sudo /bin/rm "$(sudo /usr/bin/cut -d' ' -f3- <<< "$f")"
-    prev=$sum
-done
-}
 Check_files(){
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Initializing sql Files ...'
 if
@@ -272,7 +263,7 @@ then
             echo -e $COL_GREEN' OK'$COL_RESET
                 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Extracting TrinityDB ...'
                 if
-                    cd $HOME/Applications/trinityserver/sql/base; 7z x -y $HOME/Applications/trinityserver/sql/base/tdb.7z > /dev/null 2>/tmp/TDBtool_errorMSG
+                    cd $HOME/Applications/trinityserver/sql/base; 7za x -y $HOME/Applications/trinityserver/sql/base/tdb.7z > /dev/null 2>/tmp/TDBtool_errorMSG
                 then
                     echo -e $COL_GREEN' OK'$COL_RESET
                     Get_TDB
@@ -334,12 +325,12 @@ world_update(){
                                                             else    
                                                                 echo ' FAILED TO APPLY INFORMATION TO UPDATE_DB'
                                                                     RESTORE_DB
-                                                                exit 1
+                                                                return 1
                                                             fi
                                                 else
                                                     show_error
                                                     RESTORE_DB
-                                                    exit 1
+                                                    return 1
                                                 fi
                                         fi
             else
@@ -393,12 +384,12 @@ auth_update(){
                                                             else    
                                                                 echo ' FAILED TO APPLY INFORMATION TO UPDATE_DB'
                                                                     RESTORE_DB
-                                                                exit 1
+                                                                return 1
                                                             fi
                                                 else
                                                     show_error
                                                     RESTORE_DB
-                                                    exit 1
+                                                    return 1
                                                 fi
                                         fi
             else
@@ -452,12 +443,12 @@ characters_update(){
                                                             else    
                                                                 echo ' FAILED TO APPLY INFORMATION TO UPDATE_DB'
                                                                     RESTORE_DB
-                                                                exit 1
+                                                                return 1
                                                             fi
                                                 else
                                                     show_error
                                                     RESTORE_DB
-                                                    exit 1
+                                                    return 1
                                                 fi
                                         fi
             else
@@ -502,7 +493,7 @@ if [ "$bkfile" = "" ]
 then
     echo -e $COL_RED' No backups available'$COL_RESET
     MySQL_stop
-    exit 1
+    return 1
 else
     echo -e ' "'$COL_MAGENTA$bkfile$COL_RESET'"'$COL_GREEN' Found'$COL_RESET
 fi
@@ -510,13 +501,12 @@ f=`echo $bkfile | /usr/bin/awk '{gsub(".7z", "");print}'`
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Extracting "'$COL_MAGENTA$f$COL_RESET'" ...'
     cd $HOME/Applications/trinityserver/DB_backups
     if
-        sudo 7z x -y $(sudo /usr/bin/find -s $HOME/Applications/trinityserver | /usr/bin/sed -n '/TDB_backup/p' | /usr/bin/grep -e '\.7z' | /usr/bin/awk 'END{print}') > /dev/null 2>/tmp/TDBtool_errorMSG
+        sudo 7za x -y $(sudo /usr/bin/find -s $HOME/Applications/trinityserver | /usr/bin/sed -n '/TDB_backup/p' | /usr/bin/grep -e '\.7z' | /usr/bin/awk 'END{print}') > /dev/null 2>/tmp/TDBtool_errorMSG
     then
         echo -e $COL_GREEN' OK'$COL_RESET
     else
         show_error
-        RESTORE_DB
-        exit 1
+        return 1
     fi
 MySQL_start
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Restore Database from "'$COL_MAGENTA$f$COL_RESET'" ...'
@@ -527,7 +517,7 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Restore Database from "'$COL_MAGENTA$f$
     else
         show_error
         RESTORE_DB
-        exit 1
+        return 1
     fi
 MySQL_stop
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Reload root password ...'
@@ -535,12 +525,11 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Reload root password ...'
         sudo cp $HOME/Applications/trinityserver/DB_backups/MYSQL_PASSWORD $HOME/Applications/trinityserver/mysql/data/MYSQL_PASSWORD > /dev/null 2>&1
         then
         echo -e $COL_GREEN' OK'$COL_RESET
-        sudo rm -d -f -r $(sudo /usr/bin/find -s $HOME/Applications/trinityserver | /usr/bin/awk '{ print "source",$0 }' | /usr/bin/sed -n '/TDB_backup/p' | /usr/bin/grep -e '\.sql' | /usr/bin/awk 'END{print}') > /dev/null 2>/tmp/TDBtool_errorMSG
         sudo rm -d -f -r $HOME/Applications/trinityserver/DB_backups/MYSQL_PASSWORD > /dev/null 2>/tmp/TDBtool_errorMSG
     else
         show_error
         RESTORE_DB
-        exit 1
+        return 1
     fi
 MySQL_start
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Testing MySQL ...'
@@ -551,15 +540,11 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Testing MySQL ...'
     else
         show_error
         RESTORE_DB
-        exit 1
+        return 1
     fi
 MySQL_stop
 }
 Backup_DB(){
-if
-    Check_MySQL
-then
-    echo -e $COL_GREEN' OK'$COL_RESET
 if
     Check_DB
 then
@@ -571,7 +556,7 @@ then
         else
             echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
             MySQL_stop
-            exit 1
+            return 1
     fi
     if sudo /bin/test -f $HOME/Applications/trinityserver/mysql/data/MYSQL_PASSWORD
         then
@@ -582,7 +567,7 @@ then
             else
                 show_error
                 rm -d -f -r $HOME/Applications/trinityserver/DB_backups/$backup_file > /dev/null 2>/tmp/TDBtool_errorMSG
-                exit 1
+                return 1
             fi
     else
             echo
@@ -594,7 +579,7 @@ then
             else
                 show_error
                 rm -d -f -r $HOME/Applications/trinityserver/DB_backups/$backup_file > /dev/null 2>/tmp/TDBtool_errorMSG
-                exit 1
+                return 1
             fi
     fi
     if
@@ -602,7 +587,7 @@ then
     then
         echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Compressing Database backup ...'
         if
-        sudo 7z a -t7z -mx1 $HOME/Applications/trinityserver/DB_backups/$backup_file.7z $HOME/Applications/trinityserver/DB_backups/$backup_file $HOME/Applications/trinityserver/mysql/data/MYSQL_PASSWORD > /dev/null 2>/tmp/TDBtool_errorMSG
+        sudo 7za a -t7z -mx1 $HOME/Applications/trinityserver/DB_backups/$backup_file.7z $HOME/Applications/trinityserver/DB_backups/$backup_file $HOME/Applications/trinityserver/mysql/data/MYSQL_PASSWORD > /dev/null 2>/tmp/TDBtool_errorMSG
         then
             echo -e $COL_GREEN' OK'$COL_RESET
         else
@@ -617,13 +602,6 @@ then
         show_error
     fi
     fi
-#MySQL_stop
-#MySQL_kill
-#exit 1
-DB_update
-fi
-else
-show_error
 fi
 }
 realmlist_set_internal(){
@@ -690,7 +668,7 @@ MySQL_start
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Generating MySQL root password ...'
 pw_file=MYSQL_PASSWORD
     if
-        myPW=$(/bin/cat /dev/urandom | base64 | tr -dc A-Za-z0-9_ | /usr/bin/head -c8 2>/tmp/TDBtool_errorMSG)
+        myPW=$(openssl rand -base64 6 2>/tmp/TDBtool_errorMSG)
         echo $myPW > /tmp/MYSQL_PASSWORD 2>/tmp/TDBtool_errorMSG
         sudo cp /tmp/MYSQL_PASSWORD $HOME/Applications/trinityserver/mysql/data/MYSQL_PASSWORD 2>/tmp/TDBtool_errorMSG
         rm -d -f -r /tmp/MYSQL_PASSWORD 2>/tmp/TDBtool_errorMSG
@@ -857,7 +835,79 @@ echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'auth_database.sq
                     exit 1
     fi
 }
-#functions_end
+Get7Zip(){
+echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Downloading "'$COL_MAGENTA'7Zip (required for Backup compression)'$COL_RESET'" ...'
+    if
+    	cd ~/Downloads > /dev/null 2>/tmp/TDBtool_errorMSG
+    	rm -d -f -r p7zip_9.20.1_src_all.tar.bz2 > /dev/null 2>/tmp/TDBtool_errorMSG
+		curl -O -s 'http://optimate.dl.sourceforge.net/project/p7zip/p7zip/9.20.1/p7zip_9.20.1_src_all.tar.bz2' > /dev/null 2>/tmp/TDBtool_errorMSG
+    then
+        echo -e $COL_GREEN' OK'$COL_RESET
+        echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Extracting 7Zip ...'
+            if
+				cd ~/Downloads > /dev/null 2>/tmp/TDBtool_errorMSG
+				tar -xjf p7zip_9.20.1_src_all.tar.bz2 > /dev/null 2>/tmp/TDBtool_errorMSG
+            then
+                echo -e $COL_GREEN' OK'$COL_RESET
+                echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Building 7Zip ...'
+					if
+						cd ~/Downloads/p7zip_9.20.1 > /dev/null 2>/tmp/TDBtool_errorMSG
+						mv makefile.macosx_64bits makefile.machine > /dev/null 2>/tmp/TDBtool_errorMSG
+						make -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/TDBtool_errorMSG
+					then
+                        echo -e $COL_GREEN' OK'$COL_RESET
+                        echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Installing 7Zip ...'
+                        	if
+                        		sudo make install > /dev/null 2>/tmp/TDBtool_errorMSG
+                        	then
+								echo -e $COL_GREEN' OK'$COL_RESET
+								return 0
+				            else
+                        		show_error
+                        		return 1
+                    		fi		
+				    else
+                        show_error
+                        return 1
+                    fi	
+			else
+                show_error
+                return 1
+            fi
+	else
+        show_error
+        return 1
+    fi	                    
+}
+show_error(){
+    echo -e $COL_RED' failed'$COL_RESET
+    echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
+    rm -d -f -r /tmp/TDBtool_errorMSG
+    return 1
+    echo
+}
+SoftwareCheck(){
+if
+    Check_files
+then
+    echo -e $COL_GREEN' OK'$COL_RESET
+else
+    echo -e $COL_RED' error'$COL_RESET
+    echo
+    echo -e $COL_RED$'Some sql files missing!'$COL_RESET
+    echo -e $COL_RED$'Make sure that $HOME/Applications/trinityserver/sql/ exists.'$COL_RESET
+    echo
+    MySQL_stop
+    exit 1
+fi
+echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Looking for 7z ...'
+if
+    7za > /dev/null 2>&1
+    then
+        echo -e $COL_GREEN' OK'$COL_RESET
+    else    
+		Get7Zip
+fi
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Looking for headers ...'
 if [[ -d /usr/include ]]
 then
@@ -867,12 +917,6 @@ else
     xcode-select --install
     exit 1
 fi
-show_error(){
-    echo -e $COL_RED' failed'$COL_RESET
-    echo -e $COL_RED'    error '$COL_WHITE$(/bin/cat /tmp/TDBtool_errorMSG)$COL_RESET
-    rm -d -f -r /tmp/TDBtool_errorMSG
-    return 1
-    echo
 }
 Main_menu(){
 if [[ -d $HOME/Applications/trinityserver/mysql/data ]]
@@ -890,28 +934,32 @@ echo -e '    '$COL_RED'[Exit the Script]'$COL_RESET' To exit the script, press k
         read -p 'To continue, make a choice and press enter: ' yn
         case $yn in
         [Nn]* ) sudo rm -d -f -r $HOME/Applications/trinityserver/mysql/data
+                Do_newDB
+				Get_TDB
+				Do_TDB
+				Do_characters_database
+				Do_auth_database
+				DB_update
                 break ;;
         [Uu]* ) Check_DB
                 Backup_DB
-                Remove_dubs
                 DB_update
-                exit ;;
+                break ;;
         [Ww]* ) Backup_DB
                 Get_TDB
                 Do_TDB
-                Remove_dubs
                 DB_update
-                exit ;;
+                break ;;
         [Bb]* ) Check_DB
                 Backup_DB
                 break ;;
         [Rr]* ) Check_DB
                 RESTORE_DB
-                exit ;;
+                break ;;
         [Ii]* ) realmlist_set_internal
-                exit ;;
+                break ;;
         [Ee]* ) realmlist_set_external
-                exit ;;
+                break ;;
         [Qq]* ) echo "OK. Bye!"
                 exit ;;
         * ) ;;
@@ -919,109 +967,12 @@ echo -e '    '$COL_RED'[Exit the Script]'$COL_RESET' To exit the script, press k
     done
 fi
 }
+#functions_end
+SoftwareCheck
 Check_MySQL_user
 Check_DB
 Main_menu
-MySQL_kill
-if
-    Check_files
-then
-    echo -e $COL_GREEN' OK'$COL_RESET
-else
-    echo -e $COL_RED' error'$COL_RESET
-    echo
-    echo -e $COL_RED$'Some sql files missing!'$COL_RESET
-    echo -e $COL_RED$'Make sure that $HOME/Applications/trinityserver/sql/ exists.'$COL_RESET
-    echo
-    MySQL_stop
-    exit 1
-fi
-echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Looking for 7z ...'
-if
-    7z > /dev/null 2>&1
-    then
-        echo -e $COL_GREEN' OK'$COL_RESET
-    else    
-        echo -e $COL_RED' error'$COL_RESET
-        echo
-        echo -e $COL_RED'Can not find the 7z command line tool!'$COL_RESET
-        echo -e $COL_RED'You can run the following commands to install 7z:'$COL_RESET
-        echo -e '     ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"'
-        echo -e '     brew install p7zip'
-        echo
-        MySQL_stop
-        exit 1
-fi
-echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Looking for Base64 ...'
-if
-    base64 -h > /dev/null 2>&1
-    then
-        echo -e $COL_GREEN' OK'$COL_RESET
-    else    
-        echo -e $COL_RED' error'$COL_RESET
-        echo
-        echo -e $COL_RED'Can not find the base64 command line tool!'$COL_RESET
-        echo -e $COL_RED'You can run the following commands to install 7z:'$COL_RESET
-        echo -e '     ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"'
-        echo -e '     brew install base64'
-        echo
-        MySQL_stop
-        exit 1
-fi
-MySQL_stop
-Check_MySQL_user
-if Remove_dubs
-then
-    echo -e $COL_GREEN' OK'$COL_RESET
-else
-show_error
-fi
-Backup_DB
-MySQL_stop
 
-Do_newDB
-Get_TDB
-Do_TDB
-Do_characters_database
-Do_auth_database
-DB_update
-if
-/bin/test -d $HOME/Applications/trinityserver/sql/Transmogrification
-then
-        echo -e $COL_BLUE'[TDBtool] '$COL_RESET'TransmogrificationNPC found ...'
-        if /bin/test -f $HOME/Applications/trinityserver/sql/Transmogrification/characters.sql; then
-            echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'characters.sql'$COL_RESET'" ...'
-                if
-                    sudo $HOME/Applications/trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat $HOME/Applications/trinityserver/mysql/data/MYSQL_PASSWORD) characters < $HOME/Applications/trinityserver/sql/Transmogrification/characters.sql > /dev/null 2>/tmp/TDBtool_errorMSG
-                then
-                    echo -e $COL_GREEN' OK'$COL_RESET
-                else
-                    show_error
-                fi
-        fi
-        if /bin/test -f $HOME/Applications/trinityserver/sql/Transmogrification/world_texts.sql; then
-        
-            echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'world_texts.sql'$COL_RESET'" ...'
-                if
-                    sudo $HOME/Applications/trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat $HOME/Applications/trinityserver/mysql/data/MYSQL_PASSWORD) world < $HOME/Applications/trinityserver/sql/Transmogrification/world_texts.sql > /dev/null 2>/tmp/TDBtool_errorMSG
-                then
-                    echo -e $COL_GREEN' OK'$COL_RESET
-                else
-                    show_error
-                fi
-        fi
-        if /bin/test -f $HOME/Applications/trinityserver/sql/Transmogrification/world_NPC.sql; then
-        
-            echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Running "'$COL_MAGENTA'world_NPC.sql'$COL_RESET'" ...'
-                if
-                    sudo $HOME/Applications/trinityserver/mysql/bin/mysql -u root -p$(sudo /bin/cat $HOME/Applications/trinityserver/mysql/data/MYSQL_PASSWORD) world < $HOME/Applications/trinityserver/sql/Transmogrification/world_NPC.sql > /dev/null 2>/tmp/TDBtool_errorMSG
-                then
-                    echo -e $COL_GREEN' OK'$COL_RESET
-                else
-                    show_error
-                fi
-        fi
-fi
 MySQL_restart
 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Optimizing all Databases ...'
 if
@@ -1033,4 +984,3 @@ show_error
 fi
 MySQL_stop
 MySQL_kill
-exit
