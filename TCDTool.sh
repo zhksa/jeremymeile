@@ -10,7 +10,6 @@ COL_MAGENTA=$ESC_SEQ"35;01m"
 COL_CYAN=$ESC_SEQ"36;01m"
 COL_GRAY=$ESC_SEQ"30;01m"
 COL_WHITE=$ESC_SEQ"37;01m"
-
 CMAKE_VER='2.8.12.2'
 GIT_VER='1.8.4.2'
 ACE_VER='6.2.5'
@@ -29,24 +28,23 @@ echo
 echo -e  'TrinityCore Dependency Tool '$COL_BLUE'[TCDtool]'$COL_RESET''
 echo -e  'Gives you all the necessary Open Source Tools for TrinityCore.'
 echo -e  'Everything will be installed to /usr/local.'
-
     if [ $(sw_vers -productVersion | cut -c 1-4) = "10.3" ]
     then
-    	echo
-		echo -e  $COL_RED'[OSX 10.6 or higher is required!]'$COL_RESET''
-		exit 1
+        echo
+        echo -e  $COL_RED'[OSX 10.6 or higher is required!]'$COL_RESET''
+        exit 1
     fi
     if [ $(sw_vers -productVersion | cut -c 1-4) = "10.4" ]
     then
-    	echo
-		echo -e  $COL_RED'[OSX 10.6 or higher is required!]'$COL_RESET''
-		exit 1
+        echo
+        echo -e  $COL_RED'[OSX 10.6 or higher is required!]'$COL_RESET''
+        exit 1
     fi
     if [ $(sw_vers -productVersion | cut -c 1-4) = "10.5" ]
     then
-    	echo
-		echo -e  $COL_RED'[OSX 10.6 or higher is required!]'$COL_RESET''
-		exit 1
+        echo
+        echo -e  $COL_RED'[OSX 10.6 or higher is required!]'$COL_RESET''
+        exit 1
     fi
 echo
 if
@@ -142,18 +140,18 @@ echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'ace' ${ACE_V
                                 sudo () { ( unset LD_LIBRARY_PATH DYLD_LIBRARY_PATH; exec command sudo $* ) }
                                 sudo ACE_ROOT=$ACE_ROOT make install > /dev/null 2>/tmp/TCDtool_errorMSG
                                 cat /usr/local/include/ace/config-macosx-leopard.h | sed -n '/if defined(__APPLE_CC__) && (__APPLE_CC__ < 1173)/!p' | sed -n '/Compiler must be upgraded/!p' | sed -n '/ __APPLE_CC__ /!p' > /tmp/config-macosx-leopard.h
-                        		sudo cp /tmp/config-macosx-leopard.h /usr/local/include/ace/config-macosx-leopard.h
+                                sudo cp /tmp/config-macosx-leopard.h /usr/local/include/ace/config-macosx-leopard.h
                             then
                                 echo -e $COL_GREEN' OK'$COL_RESET
                                 return 0
                             else
                                 show_error
                                 return 1
-                            fi      
+                            fi
                     else
                         show_error
                         return 1
-                    fi  
+                    fi
             else
                 show_error
                 return 1
@@ -161,7 +159,7 @@ echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'ace' ${ACE_V
     else
         show_error
         return 1
-    fi                      
+    fi
 }
 GetReadline(){
 echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'readline' ${READLINE_VER}$COL_RESET'" ...'
@@ -196,11 +194,11 @@ echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'readline' ${
                             else
                                 show_error
                                 return 1
-                            fi      
+                            fi
                     else
                         show_error
                         return 1
-                    fi  
+                    fi
             else
                 show_error
                 return 1
@@ -208,7 +206,7 @@ echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'readline' ${
     else
         show_error
         return 1
-    fi                      
+    fi
 }
 GetCMake(){
 echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'cmake' ${CMAKE_VER}$COL_RESET'" ...'
@@ -228,7 +226,7 @@ echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'cmake' ${CMA
                 echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Building "'$COL_MAGENTA'cmake' ${CMAKE_VER}$COL_RESET'" ...'
                     if
                         cd ~/Downloads/cmake-${CMAKE_VER} > /dev/null 2>/tmp/TCDtool_errorMSG
-						./bootstrap > /dev/null 2>/tmp/TCDtool_errorMSG
+                        ./bootstrap > /dev/null 2>/tmp/TCDtool_errorMSG
                         make -j $(sysctl -n hw.ncpu) > /dev/null 2>/tmp/TCDtool_errorMSG
                     then
                         echo -e $COL_GREEN' OK'$COL_RESET
@@ -241,11 +239,11 @@ echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'cmake' ${CMA
                             else
                                 show_error
                                 return 1
-                            fi      
+                            fi
                     else
                         show_error
                         return 1
-                    fi  
+                    fi
             else
                 show_error
                 return 1
@@ -253,7 +251,7 @@ echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'cmake' ${CMA
     else
         show_error
         return 1
-    fi                      
+    fi
 }
 GetGit(){
 echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'git' ${GIT_VER}$COL_RESET'" ...'
@@ -277,7 +275,7 @@ echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'git' ${GIT_V
                     else
                         show_error
                         return 1
-                    fi  
+                    fi
             else
                 show_error
                 return 1
@@ -285,7 +283,7 @@ echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'git' ${GIT_V
     else
         show_error
         return 1
-    fi                      
+    fi
 }
 GetOpenSSL(){
 echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'openssl' ${OPENSSL_VERSION}$COL_RESET'" ...'
@@ -305,10 +303,10 @@ echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'openssl' ${O
                 echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Building "'$COL_MAGENTA'openssl' ${OPENSSL_VERSION}$COL_RESET'" ...'
                     if
                         cd ~/Downloads/openssl-${OPENSSL_VERSION} > /dev/null 2>/tmp/TCDtool_errorMSG
-                		./Configure --prefix=/usr/local --openssldir=/usr/local darwin64-x86_64-cc enable-ec_nistp_64_gcc_128 shared zlib-dynamic enable-cms > /dev/null 2>/tmp/TCDtool_errorMSG
-                    	make depend > /dev/null 2>/tmp/TCDtool_errorMSG
-                    	make > /dev/null 2>/tmp/TCDtool_errorMSG
-						make test > /dev/null 2>/tmp/TCDtool_errorMSG
+                        ./Configure --prefix=/usr/local --openssldir=/usr/local darwin64-x86_64-cc enable-ec_nistp_64_gcc_128 shared zlib-dynamic enable-cms > /dev/null 2>/tmp/TCDtool_errorMSG
+                        make depend > /dev/null 2>/tmp/TCDtool_errorMSG
+                        make > /dev/null 2>/tmp/TCDtool_errorMSG
+                        make test > /dev/null 2>/tmp/TCDtool_errorMSG
                     then
                         echo -e $COL_GREEN' OK'$COL_RESET
                         echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Installing "'$COL_MAGENTA'openssl' ${OPENSSL_VERSION}$COL_RESET'" ...'
@@ -320,11 +318,11 @@ echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'openssl' ${O
                             else
                                 show_error
                                 return 1
-                            fi      
+                            fi
                     else
                         show_error
                         return 1
-                    fi  
+                    fi
             else
                 show_error
                 return 1
@@ -332,7 +330,7 @@ echo -ne $COL_BLUE'[TCDtool] '$COL_RESET'Downloading "'$COL_MAGENTA'openssl' ${O
     else
         show_error
         return 1
-    fi                      
+    fi
 }
 GetAce
 GetCMake
