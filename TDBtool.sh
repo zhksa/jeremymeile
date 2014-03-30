@@ -255,7 +255,7 @@ then
         if
             sudo chown -R $USER $HOME/Applications/trinityserver/*
             sudo chown -R mysql $HOME/Applications/trinityserver/mysql/data
-            curl -s http://www.trinitycore.org/f/files/getdownload/546-tdb-full-updates/ > $HOME/Applications/trinityserver/sql/base/tdb.7z 2>/tmp/TDBtool_errorMSG
+            curl -s http://www.trinitycore.org/f/files/getdownload/969-tdb-full-updates/ > $HOME/Applications/trinityserver/sql/base/tdb.7z 2>/tmp/TDBtool_errorMSG
         then
             echo -e $COL_GREEN' OK'$COL_RESET
                 echo -ne $COL_BLUE'[TDBtool] '$COL_RESET'Extracting TrinityDB ...'
